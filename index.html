@@ -394,6 +394,21 @@
       cursor: pointer;
     }
 
+    /* Small inline gallery for Social Media Marketing project */
+    .smm-thumbs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .smm-thumbs img {
+      width: calc((100% - 16px) / 3);
+      height: 86px;
+      object-fit: cover;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
     /* Lightbox modal */
     .modal {
       position: fixed;
@@ -738,6 +753,17 @@
           <h3>E-commerce Case Study</h3>
           <p>Performance-focused store with improved conversions and speed optimizations.</p>
           <span class="project-tag">WooCommerce / Shopify</span>
+        </div>
+        <!-- Social Media Marketing project with 3 thumbnails -->
+        <div class="project-card">
+          <div class="smm-thumbs">
+            <img class="project-thumb" src="mm1 (1).png" alt="SMM project 1">
+            <img class="project-thumb" src="mm1 (2).png" alt="SMM project 2">
+            <img class="project-thumb" src="mm1 (3).png" alt="SMM project 3">
+          </div>
+          <h3>Social Media Marketing</h3>
+          <p>Campaign visuals, post creatives and performance snapshots from recent social campaigns.</p>
+          <span class="project-tag">Social Media</span>
         </div>
       </div>
     </div>
