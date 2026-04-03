@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aleena Fatima | WordPress Developer</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: #f8f4f8;
+      color: #222;
+      line-height: 1.6;
+      padding-top: 74px; /* reserve space for fixed header */
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 1200px;
+      margin: auto;
+    }
+
+    /* Make navbar container positioned so logo can be centered */
+    .container.navbar { position: relative; }
+
+    /* Header + Hero Same Color */
+    .top-section {
+      background: #411C45;
+      color: #fff;
+    }
+
+    header {
+      position: fixed; /* keep header visible at top */
+      top: 0;
+      left: 0;
+      right: 0;
+      width: 100%;
+      height: 74px;
+      z-index: 1000;
+      background: #411C45;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 100%;
+      padding: 0 0;
+    }
+
+    /* Mobile menu toggle (hidden on desktop) */
+    .menu-toggle {
+      display: none;
+      background: transparent;
+      border: 0;
+      cursor: pointer;
+      padding: 12px; /* larger touch target */
+      position: absolute;
+      left: 18px; /* flush to left with small inset */
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 1201;
+    }
+
+    .menu-toggle .hamburger { display:inline-block; width:22px; height:18px; position:relative; }
+    .menu-toggle .hamburger span { position:absolute; left:0; right:0; height:2px; background:#fff; display:block; border-radius:2px; transition: transform .18s ease, opacity .18s ease; }
+    .menu-toggle .hamburger span:nth-child(1){ top:2px; }
+    .menu-toggle .hamburger span:nth-child(2){ top:8px; }
+    .menu-toggle .hamburger span:nth-child(3){ top:14px; }
+
+    /* X state when open */
+    .menu-toggle.open .hamburger span:nth-child(1){ transform: translateY(8px) rotate(45deg); }
+    .menu-toggle.open .hamburger span:nth-child(2){ opacity: 0; }
+    .menu-toggle.open .hamburger span:nth-child(3){ transform: translateY(-8px) rotate(-45deg); }
+
+    .logo {
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      color: #fff;
+      position: absolute; /* center visually */
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none; /* avoid intercepting clicks */
+      text-align: center;
+    }
+
+    .logo span {
+      color: #f2b6ff;
+    }
+
+    nav ul {
+      display: flex;
+      list-style: none;
+      gap: 28px;
+    }
+
+    /* keep nav to the right side of the header */
+    .navbar nav { margin-left: auto; }
+
+    /* Mobile nav styles (hidden by default) */
+    nav.mobile-open { display: block; }
+
+    /* Improve header container spacing */
+    header .container.navbar { padding: 0 20px; }
+    .logo { display:block; color:#fff; }
+
+    nav ul li a {
+      color: #fff;
+      font-size: 15px;
+      transition: 0.3s ease;
+    }
+
+    nav ul li a:hover {
+      color: #f2b6ff;
+    }
+
+    .hero {
+      min-height: 88vh;
+      display: flex;
+      align-items: center;
+      padding: 70px 0 90px;
+    }
+
+    .hero-content {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 40px;
+      align-items: center;
+    }
+
+    /* Place the hero card below the main hero text and add profile image styles */
+    .hero-text {
+      grid-column: 1;
+      grid-row: 1;
+    }
+
+    .hero-card {
+      grid-column: 1 / -1;
+      grid-row: 2;
+    }
+
+    .profile-img {
+      width: 220px;
+      height: 220px;
+      border-radius: 80%;
+      object-fit: cover;
+      display: block;
+      margin: 0 auto 16px;
+      transform: translateY(-12px);
+    }
+
+    /* Right-column hero image (adjacent to intro) */
+    .hero-image {
+      grid-column: 2;
+      grid-row: 1;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding-top: 8px;
+    }
+
+    .hero-text h4 {
+      font-size: 18px;
+      font-weight: 500;
+      color: #f2b6ff;
+      margin-bottom: 15px;
+    }
+
+    .hero-text h1 {
+      font-size: 58px;
+      line-height: 1.15;
+      margin-bottom: 18px;
+    }
+
+    .hero-text h1 span {
+      color: #f2b6ff;
+    }
+
+    .hero-text p {
+      max-width: 620px;
+      color: #ece1ee;
+      font-size: 17px;
+      margin-bottom: 30px;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 30px;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 14px 28px;
+      border-radius: 40px;
+      font-weight: 700;
+      transition: 0.3s ease;
+      border: 2px solid transparent;
+    }
+
+    .btn-primary {
+      background: #f2b6ff;
+      color: #411C45;
+    }
+
+    .btn-primary:hover {
+      background: transparent;
+      border-color: #f2b6ff;
+      color: #fff;
+    }
+
+    .btn-outline {
+      border: 2px solid rgba(255,255,255,0.35);
+      color: #fff;
+    }
+
+    .btn-outline:hover {
+      border-color: #f2b6ff;
+      color: #f2b6ff;
+    }
+
+    .hero-stats {
+      display: flex;
+      gap: 30px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+
+    .hero-stats div h3 {
+      font-size: 28px;
+      color: #fff;
+    }
+
+    .hero-stats div p {
+      margin: 0;
+      font-size: 14px;
+      color: #dac8dd;
+    }
+
+    .hero-card {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.12);
+      backdrop-filter: blur(8px);
+      padding: 30px;
+      border-radius: 24px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+    }
+
+    .hero-card h3 {
+      font-size: 24px;
+      margin-bottom: 18px;
+      color: #fff;
+    }
+
+    .hero-card ul {
+      list-style: none;
+    }
+
+    .hero-card ul li {
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      color: #f4ebf5;
+    }
+
+    .hero-card ul li:last-child {
+      border-bottom: none;
+    }
+
+    section {
+      padding: 90px 0;
+    }
+
+    .section-title {
+      text-align: center;
+      margin-bottom: 50px;
+    }
+
+    .section-title h2 {
+      font-size: 38px;
+      color: #411C45;
+      margin-bottom: 10px;
+    }
+
+    .section-title p {
+      max-width: 700px;
+      margin: auto;
+      color: #666;
+    }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 35px;
+    }
+
+    .about-box, .service-card, .project-card, .contact-box {
+      background: #fff;
+      padding: 30px;
+      border-radius: 22px;
+      box-shadow: 0 10px 35px rgba(65, 28, 69, 0.08);
+      transition: 0.3s ease;
+    }
+
+    .about-box:hover, .service-card:hover, .project-card:hover, .contact-box:hover {
+      transform: translateY(-6px);
+    }
+
+    .about-box h3 {
+      color: #411C45;
+      margin-bottom: 16px;
+      font-size: 24px;
+    }
+
+    .about-box p {
+      color: #555;
+      margin-bottom: 14px;
+    }
+
+    .skills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .skills span {
+      background: #f3e8f5;
+      color: #411C45;
+      padding: 10px 16px;
+      border-radius: 30px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .services-grid,
+    .projects-grid,
+    .contact-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 25px;
+    }
+
+    .service-card h3,
+    .project-card h3,
+    .contact-box h3 {
+      color: #411C45;
+      margin-bottom: 14px;
+      font-size: 22px;
+    }
+
+    .service-card p,
+    .project-card p,
+    .contact-box p {
+      color: #666;
+      margin-bottom: 12px;
+    }
+
+    .project-tag {
+      display: inline-block;
+      margin-top: 8px;
+      padding: 8px 14px;
+      border-radius: 20px;
+      background: #f3e8f5;
+      color: #411C45;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    /* Project thumbnails / lightbox */
+    .project-card img.project-thumb {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 12px;
+      margin-bottom: 12px;
+      cursor: pointer;
+    }
+
+    /* Lightbox modal */
+    .modal {
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0,0,0,0.6);
+      z-index: 2000;
+      padding: 20px;
+    }
+
+    .modal.open { display: flex; }
+
+    .modal-content {
+      max-width: 1000px;
+      width: 100%;
+      background: #fff;
+      border-radius: 12px;
+      padding: 18px;
+      box-shadow: 0 30px 60px rgba(0,0,0,0.4);
+      text-align: left;
+    }
+
+    .modal-content img { width: 100%; height: auto; border-radius: 8px; }
+
+    .modal-close {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 8px 14px;
+      background: #411C45;
+      color: #fff;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .contact-box a {
+      color: #411C45;
+      font-weight: 700;
+    }
+
+    footer {
+      background: #2c102f;
+      color: #ddd;
+      text-align: center;
+      padding: 24px 15px;
+    }
+
+    @media (max-width: 992px) {
+      .about-grid,
+      .services-grid,
+      .projects-grid,
+      .contact-grid {
+        grid-template-columns: 1fr;
+      }
+
+      /* Keep hero as two columns on tablet and smaller screens
+         but reduce column ratio and spacing so layout fits */
+      .hero-content {
+        grid-template-columns: 1fr 0.9fr;
+        gap: 18px;
+        align-items: start;
+      }
+
+      .hero-text h1 {
+        font-size: 44px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .navbar {
+        flex-direction: column;
+        gap: 14px;
+      }
+
+      nav ul {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 16px;
+      }
+
+      .hero {
+        min-height: auto;
+        padding: 40px 0 60px;
+      }
+
+      /* Keep hero two-column layout on small phones as well */
+      .hero-content {
+        grid-template-columns: 1fr 0.9fr;
+        gap: 14px;
+      }
+
+      .profile-img { width: 140px; height: 140px; border-radius: 50%; }
+
+      .hero-text h1 {
+        font-size: 36px;
+      }
+
+      .section-title h2 {
+        font-size: 30px;
+      }
+    }
+
+    /* Mobile header adjustments */
+    @media (max-width: 768px) {
+      header { height: 64px; }
+      body { padding-top: 64px; }
+
+      .logo { font-size: 22px; }
+
+      /* show the hamburger and hide desktop nav
+        show nav when `.open` class is applied by JS */
+      .menu-toggle { display: inline-flex; position: absolute; left: 14px; top: 50%; transform: translateY(-50%); z-index:1201; }
+      /* logo remains centered via absolute positioning */
+      .logo { order: 2; margin-left: 8px; pointer-events: none; }
+      nav { position: absolute; top: 64px; left: 0; right: 0; display: none; background: #411C45; padding: 10px 0; box-shadow: 0 8px 20px rgba(0,0,0,0.18); transition: transform .22s ease, opacity .22s ease; transform-origin: top; }
+      nav.open { display: block; opacity:1; transform: translateY(0); }
+      nav.hidden { opacity:0; transform: translateY(-6px); }
+      nav ul { flex-direction: column; gap: 0; align-items: stretch; padding: 0 18px; }
+      nav ul li { border-bottom: 1px solid rgba(255,255,255,0.04); }
+      nav ul li a { display: block; padding: 12px 6px; font-size: 16px; }
+
+      /* Improved mobile hero spacing and typography */
+      .hero { padding: 24px 0 40px; }
+      .hero-content { grid-template-columns: 1fr 0.85fr; gap: 16px; align-items: start; }
+      .hero-text { max-width: 380px; padding-right: 6px; }
+      .hero-text h4 { font-size: 14px; letter-spacing: 0.4px; margin-bottom: 8px; color: #f2b6ff; }
+      .hero-text h1 { font-size: 28px; line-height: 1.05; font-weight: 800; margin: 0 0 10px; }
+      .hero-text p { font-size: 15px; color: #efe3ef; margin-bottom: 16px; max-width: 40ch; line-height: 1.4; }
+
+      /* Buttons: stack on narrow devices but keep close and prominent */
+      .hero-buttons { gap: 12px; display: flex; align-items: center; }
+      .hero-buttons .btn-primary { padding: 12px 22px; font-size: 15px; border-radius: 36px; }
+      .hero-buttons .btn-outline { padding: 10px 18px; font-size: 14px; border-radius: 36px; }
+
+      /* Keep the profile image adjacent and visually tied to text */
+      .hero-image { align-items: flex-start; padding-top: 6px; }
+      .profile-img { width: 120px; height: 120px; border-radius: 50%; transform: translateY(-6px); border: 4px solid rgba(242,182,255,0.12); box-shadow: 0 10px 30px rgba(0,0,0,0.18); }
+    }
+
+    /* Very small screens: preserve two-column hero but reduce image size */
+    @media (max-width: 480px) {
+      .hero-content {
+        grid-template-columns: 1fr 0.8fr;
+        gap: 12px;
+      }
+
+      .profile-img { width: 96px; height: 96px; border-radius: 50%; }
+      .hero-text h1 { font-size: 24px; }
+      .hero-text p { font-size: 14px; max-width: 36ch; }
+      .hero-buttons { flex-direction: column; align-items: flex-start; }
+      .hero-buttons .btn { width: auto; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="top-section">
+    <header>
+      <div class="container navbar">
+        <div class="logo">Aleena <span>Fatima</span></div>
+
+        <!-- Mobile menu toggle -->
+        <button class="menu-toggle" aria-expanded="false" aria-controls="main-nav" aria-label="Open menu">
+          <span class="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+          </span>
+        </button>
+
+        <nav id="main-nav">
+          <ul>
+            <li><a href="#home">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#services">Services</a></li>
+            <li><a href="#projects">Projects</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <section class="hero" id="home">
+      <div class="container hero-content">
+        <div class="hero-text">
+          <h4>Professional WordPress Developer</h4>
+          <h1>Building <span>Strong</span>, Modern & High-Converting Websites</h1>
+          <p>
+            Hi — I build fast, responsive WordPress sites that look premium and convert visitors into customers.
+            Clean design, reliable performance, and focused on results.
+          </p>
+          <div class="hero-buttons">
+            <a href="#projects" class="btn btn-primary">View Portfolio</a>
+            <a href="#contact" class="btn btn-outline">Hire Me</a>
+          </div>
+          <div class="hero-stats">
+            <div>
+              <h3>3+</h3>
+              <p>Years Experience</p>
+            </div>
+            <div>
+              <h3>50+</h3>
+              <p>Projects Completed</p>
+            </div>
+            <div>
+              <h3>100%</h3>
+              <p>Responsive Design</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-image">
+          <img class="profile-img" src="profile.jpeg" alt="Aleena Fatima">
+        </div>
+
+        <div class="hero-card">
+          <h3>What I Do Best</h3>
+          <ul>
+            <li>Custom WordPress Website Development</li>
+            <li>Elementor & Theme Customization</li>
+            <li>Business, Blog & E-commerce Websites</li>
+            <li>Website Speed Optimization</li>
+            <li>Landing Pages for Leads & Sales</li>
+            <li>Ongoing Website Maintenance</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <section id="about">
+    <div class="container">
+      <div class="section-title">
+        <h2>About Me</h2>
+        <p>I create websites that are not only beautiful but also practical, fast, and focused on user experience.</p>
+      </div>
+      <div class="about-grid">
+        <div class="about-box">
+          <h3>Who is Aleena Fatima?</h3>
+          <p>
+            Aleena Fatima is a skilled WordPress Developer with a passion for crafting elegant,
+            functional, and conversion-focused websites. She works on personal brands, business websites,
+            blogs, and online stores with a strong attention to design and structure.
+          </p>
+          <p>
+            Her goal is simple: create websites that look premium, perform smoothly, and help clients grow online.
+          </p>
+        </div>
+        <div class="about-box">
+          <h3>Core Skills</h3>
+          <p>Strong command over modern website building tools and WordPress customization.</p>
+          <div class="skills">
+            <span>WordPress</span>
+            <span>HTML5</span>
+            <span>CSS3</span>
+            <span>Elementor</span>
+            <span>WooCommerce</span>
+            <span>Responsive Design</span>
+            <span>Speed Optimization</span>
+            <span>Landing Pages</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="services">
+    <div class="container">
+      <div class="section-title">
+        <h2>My Services</h2>
+        <p>Professional WordPress solutions designed to make your brand stand out online.</p>
+      </div>
+      <div class="services-grid">
+        <div class="service-card">
+          <h3>Business Websites</h3>
+          <p>I build professional business websites that create trust, improve branding, and turn visitors into clients.</p>
+        </div>
+        <div class="service-card">
+          <h3>E-commerce Stores</h3>
+          <p>From product pages to smooth user journeys, I develop WooCommerce stores that are clean and effective.</p>
+        </div>
+        <div class="service-card">
+          <h3>Landing Pages</h3>
+          <p>High-converting landing pages for ads, offers, services, and lead generation campaigns.</p>
+        </div>
+        <div class="service-card">
+          <h3>Theme Customization</h3>
+          <p>I customize WordPress themes according to your brand identity and business goals.</p>
+        </div>
+        <div class="service-card">
+          <h3>Speed Optimization</h3>
+          <p>Website performance improvements to reduce load times and improve overall user experience.</p>
+        </div>
+        <div class="service-card">
+          <h3>Maintenance & Support</h3>
+          <p>Ongoing support for updates, fixes, backups, and keeping your site secure and smooth.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="projects">
+    <div class="container">
+      <div class="section-title">
+        <h2>Featured Projects</h2>
+        <p>A few examples of the type of websites Aleena Fatima can create and manage.</p>
+      </div>
+      <div class="projects-grid">
+        <div class="project-card">
+          <img class="project-thumb" src="second image.jpeg" alt="Corporate Business Site">
+          <h3>Corporate Business Site</h3>
+          <p>A premium business website with service pages, contact forms, and a polished professional layout.</p>
+          <span class="project-tag">WordPress + Elementor</span>
+        </div>
+        <div class="project-card">
+          <img class="project-thumb" src="3rd image.jpeg" alt="Online Fashion Store">
+          <h3>Online Fashion Store</h3>
+          <p>A modern WooCommerce store with product listings, shopping cart flow, and mobile-friendly design.</p>
+          <span class="project-tag">WooCommerce</span>
+        </div>
+        <div class="project-card">
+          <img class="project-thumb" src="4th image.jpeg" alt="Shopify Store Example">
+          <h3>Shopify Store</h3>
+          <p>A Shopify store implementation — theme, product setup, and customizations.</p>
+          <span class="project-tag">Shopify</span>
+        </div>
+        <div class="project-card">
+          <img class="project-thumb" src="5.jpeg" alt="Personal Brand Portfolio">
+          <h3>Personal Brand Portfolio</h3>
+          <p>A clean personal portfolio with strong visuals, smooth sections, and a trust-building layout.</p>
+          <span class="project-tag">Responsive UI</span>
+        </div>
+        <div class="project-card">
+          <img class="project-thumb" src="portfolio.png" alt="Shopify Landing Page">
+          <h3>Shopify Landing Page</h3>
+          <p>High-converting Shopify landing page for campaigns and product launches.</p>
+          <span class="project-tag">Shopify</span>
+        </div>
+        <div class="project-card">
+          <img class="project-thumb" src="7th.jpeg" alt="E-commerce Case Study">
+          <h3>E-commerce Case Study</h3>
+          <p>Performance-focused store with improved conversions and speed optimizations.</p>
+          <span class="project-tag">WooCommerce / Shopify</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact">
+    <div class="container">
+      <div class="section-title">
+        <h2>Contact Me</h2>
+        <p>Let’s build a website that looks strong, works smoothly, and grows your online presence.</p>
+      </div>
+      <div class="contact-grid">
+        <div class="contact-box">
+          <h3>Email</h3>
+          <p>For project inquiries and collaboration.</p>
+          <a href="mailto:hafizaaleena6@gmail.com">hafizaaleena6@gmail.com</a>
+        </div>
+        <div class="contact-box">
+          <h3>Phone</h3>
+          <p>Available for freelance and client discussions.</p>
+          <a href="tel:+923214171162">03214171162</a>
+        </div>
+        <div class="contact-box">
+          <h3>Location</h3>
+          <p>Lahore, Pakistan</p>
+          <p>Working with clients locally and internationally.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>© 2026 Aleena Fatima | WordPress Developer. All Rights Reserved.</p>
+
+    <div class="footer-social" aria-label="Social links" role="navigation">
+      <a class="social-tiktok" href="https://www.tiktok.com/@sein.official?_r=1&_d=eb33d6a90gfb1l&sec_uid=MS4wLjABAAAAVH2U5ei7NlAwhcvCix7ag0EmXOp8B0jSVmNQSdMR6N82JO8kalo4PBm1fWCid_na&share_author_id=7468426300275344416&sharer_language=en&source=h5_m&u_code=ddcc9eai75c3d1&timestamp=1775209084&user_id=6849311001507120134&sec_user_id=MS4wLjABAAAAmGLbUw35lxbD2I06gPpivRXJkg5nscbJPxLDHS4VBQiDwmFn5nkARWWzazU6RJfo&item_author_type=2&utm_source=copy&utm_campaign=client_share&utm_medium=android&share_iid=7624001877043513109&share_link_id=c095e7b2-e680-44df-8a45-c0d47b1ce3ff&share_app_id=1233&ugbiz_name=ACCOUNT&ug_btm=b6880%2Cb5836&social_share_type=5&enable_checksum=1" target="_blank" rel="noopener noreferrer" aria-label="Open TikTok profile" title="TikTok">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+          <path fill="#fff" d="M9 3v10.5A4.5 4.5 0 1 0 13.5 18V8h3.5V6H13.5V3H9z"/>
+          <path fill="#fff" d="M14.2 3.5c.3 0 .6 0 .9.1v2.1c-.3 0-.6 0-.9-.1-1.2-.2-2.1.1-2.8.6v1.8c.8-.6 1.9-1 2.8-1.1z"/>
+        </svg>
+      </a>
+
+      <a class="social-fb" href="https://www.facebook.com/share/1BrQ3wyfaG/?mibextid=wwXIfr" target="_blank" rel="noopener noreferrer" aria-label="Open Facebook profile" title="Facebook">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+          <path fill="#fff" d="M22 12.07C22 6.48 17.52 2 11.93 2S2 6.48 2 12.07C2 17.07 5.66 21.17 10.44 21.9v-6.99H7.9v-2.84h2.54V9.41c0-2.5 1.5-3.88 3.78-3.88 1.1 0 2.25.2 2.25.2v2.48h-1.27c-1.25 0-1.64.78-1.64 1.58v1.9h2.8l-.45 2.84h-2.35V21.9c4.78-.73 8.44-4.83 8.44-9.83z"/>
+        </svg>
+      </a>
+    </div>
+  </footer>
+
+  <!-- Modal / Lightbox for project images -->
+  <div id="project-modal" class="modal" aria-hidden="true">
+    <div class="modal-content">
+      <h3 id="modal-title"></h3>
+      <img id="modal-image" src="" alt="Project preview">
+      <div>
+        <button id="modal-close" class="modal-close">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Project thumbnail lightbox
+    document.querySelectorAll('.project-thumb').forEach(function(el){
+      el.addEventListener('click', function(){
+        var src = el.getAttribute('src');
+        var title = el.getAttribute('alt') || '';
+        var modal = document.getElementById('project-modal');
+        document.getElementById('modal-image').src = src;
+        document.getElementById('modal-title').textContent = title;
+        modal.classList.add('open');
+        modal.setAttribute('aria-hidden','false');
+      });
+    });
+
+    document.getElementById('modal-close').addEventListener('click', function(){
+      var modal = document.getElementById('project-modal');
+      modal.classList.remove('open');
+      modal.setAttribute('aria-hidden','true');
+      document.getElementById('modal-image').src = '';
+    });
+
+    // close modal on outside click
+    document.getElementById('project-modal').addEventListener('click', function(e){
+      if (e.target === this) {
+        this.classList.remove('open');
+        this.setAttribute('aria-hidden','true');
+        document.getElementById('modal-image').src = '';
+      }
+    });
+
+    // Mobile nav toggle
+    (function(){
+      var btn = document.querySelector('.menu-toggle');
+      var nav = document.getElementById('main-nav');
+      if (!btn || !nav) return;
+      btn.addEventListener('click', function(){
+        var expanded = this.getAttribute('aria-expanded') === 'true';
+        this.setAttribute('aria-expanded', String(!expanded));
+        nav.classList.toggle('open');
+        this.classList.toggle('open');
+        this.setAttribute('aria-label', expanded ? 'Open menu' : 'Close menu');
+      });
+      // close nav on link click (mobile)
+      nav.querySelectorAll('a').forEach(function(a){
+        a.addEventListener('click', function(){ nav.classList.remove('open'); btn.classList.remove('open'); btn.setAttribute('aria-expanded','false'); btn.setAttribute('aria-label','Open menu'); });
+      });
+    })();
+  </script>
+
+  <style>
+    /* Small animation for mobile nav */
+    nav { will-change: transform, opacity; }
+    nav.open { animation: navIn .22s ease both; }
+    @keyframes navIn { from { opacity:0; transform: translateY(-6px);} to { opacity:1; transform: translateY(0);} }
+
+    /* Tweak button & CTA spacing on small screens */
+    .hero-buttons .btn-primary { box-shadow: 0 8px 24px rgba(242,182,255,0.12); }
+    .hero-buttons { align-items:center; }
+
+    /* Vertical rhythm improvements */
+    .section-title { margin-bottom: 40px; }
+    section { padding: 70px 0; }
+  </style>
+
+  <style>
+    /* Footer social icon styles */
+    .footer-social { margin-top: 12px; display:flex; justify-content:center; gap:12px; }
+    .footer-social a { width:48px; height:48px; display:inline-flex; align-items:center; justify-content:center; border-radius:50%; text-decoration:none; box-shadow:0 6px 18px rgba(0,0,0,0.18); transition:transform .18s ease, box-shadow .18s ease; }
+    .footer-social a:hover { transform:translateY(-4px) scale(1.05); box-shadow:0 14px 30px rgba(0,0,0,0.28); }
+    .footer-social svg { width:22px; height:22px; display:block; }
+    .social-tiktok { background: linear-gradient(135deg,#25F4EE 0%,#FE2C55 100%); }
+    .social-fb { background:#1877F2; }
+  </style>
+
+</body>
+</html>
