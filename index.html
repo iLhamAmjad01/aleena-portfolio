@@ -319,6 +319,12 @@
       transition: 0.3s ease;
     }
 
+    /* Ensure project cards contain thumbnails and prevent overflow */
+    .project-card {
+      position: relative;
+      overflow: hidden;
+    }
+
     .about-box:hover, .service-card:hover, .project-card:hover, .contact-box:hover {
       transform: translateY(-6px);
     }
@@ -399,14 +405,21 @@
       display: flex;
       gap: 8px;
       margin-bottom: 12px;
+      flex-wrap: nowrap;
+      align-items: center;
+      width: 100%;
     }
 
     .smm-thumbs img {
-      width: calc((100% - 16px) / 3);
+      flex: 1 1 0;
+      max-width: calc((100% - 16px) / 3);
+      min-width: 0;
       height: 86px;
       object-fit: cover;
       border-radius: 8px;
       cursor: pointer;
+      display: block;
+      box-sizing: border-box;
     }
 
     /* Lightbox modal */
