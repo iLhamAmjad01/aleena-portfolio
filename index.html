@@ -1,917 +1,1688 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Aleena Fatima | WordPress Developer</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: Arial, Helvetica, sans-serif;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
-
-    body {
-      background: #f8f4f8;
-      color: #222;
-      line-height: 1.6;
-      padding-top: 74px; /* reserve space for fixed header */
-    }
-
-    a {
-      text-decoration: none;
-      color: inherit;
-    }
-
-    .container {
-      width: 90%;
-      max-width: 1200px;
-      margin: auto;
-    }
-
-    /* Make navbar container positioned so logo can be centered */
-    .container.navbar { position: relative; }
-
-    /* Header + Hero Same Color */
-    .top-section {
-      background: #411C45;
-      color: #fff;
-    }
-
-    header {
-      position: fixed; /* keep header visible at top */
-      top: 0;
-      left: 0;
-      right: 0;
-      width: 100%;
-      height: 74px;
-      z-index: 1000;
-      background: #411C45;
-      border-bottom: 1px solid rgba(255,255,255,0.08);
-    }
-
-    .navbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      height: 100%;
-      padding: 0 0;
-    }
-
-    /* Mobile menu toggle (hidden on desktop) */
-    .menu-toggle {
-      display: none;
-      background: transparent;
-      border: 0;
-      cursor: pointer;
-      padding: 12px; /* larger touch target */
-      position: absolute;
-      left: 18px; /* flush to left with small inset */
-      top: 50%;
-      transform: translateY(-50%);
-      z-index: 1201;
-    }
-
-    .menu-toggle .hamburger { display:inline-block; width:22px; height:18px; position:relative; }
-    .menu-toggle .hamburger span { position:absolute; left:0; right:0; height:2px; background:#fff; display:block; border-radius:2px; transition: transform .18s ease, opacity .18s ease; }
-    .menu-toggle .hamburger span:nth-child(1){ top:2px; }
-    .menu-toggle .hamburger span:nth-child(2){ top:8px; }
-    .menu-toggle .hamburger span:nth-child(3){ top:14px; }
-
-    /* X state when open */
-    .menu-toggle.open .hamburger span:nth-child(1){ transform: translateY(8px) rotate(45deg); }
-    .menu-toggle.open .hamburger span:nth-child(2){ opacity: 0; }
-    .menu-toggle.open .hamburger span:nth-child(3){ transform: translateY(-8px) rotate(-45deg); }
-
-    .logo {
-      font-size: 28px;
-      font-weight: 700;
-      letter-spacing: 1px;
-      color: #fff;
-      position: absolute; /* center visually */
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%);
-      pointer-events: none; /* avoid intercepting clicks */
-      text-align: center;
-    }
-
-    .logo span {
-      color: #f2b6ff;
-    }
-
-    nav ul {
-      display: flex;
-      list-style: none;
-      gap: 28px;
-    }
-
-    /* keep nav to the right side of the header */
-    .navbar nav { margin-left: auto; }
-
-    /* Mobile nav styles (hidden by default) */
-    nav.mobile-open { display: block; }
-
-    /* Improve header container spacing */
-    header .container.navbar { padding: 0 20px; }
-    .logo { display:block; color:#fff; }
-
-    nav ul li a {
-      color: #fff;
-      font-size: 15px;
-      transition: 0.3s ease;
-    }
-
-    nav ul li a:hover {
-      color: #f2b6ff;
-    }
-
-    .hero {
-      min-height: 88vh;
-      display: flex;
-      align-items: center;
-      padding: 70px 0 90px;
-    }
-
-    .hero-content {
-      display: grid;
-      grid-template-columns: 1.2fr 0.8fr;
-      gap: 40px;
-      align-items: center;
-    }
-
-    /* Place the hero card below the main hero text and add profile image styles */
-    .hero-text {
-      grid-column: 1;
-      grid-row: 1;
-    }
-
-    .hero-card {
-      grid-column: 1 / -1;
-      grid-row: 2;
-    }
-
-    .profile-img {
-      width: 220px;
-      height: 220px;
-      border-radius: 80%;
-      object-fit: cover;
-      display: block;
-      margin: 0 auto 16px;
-      transform: translateY(-12px);
-    }
-
-    /* Right-column hero image (adjacent to intro) */
-    .hero-image {
-      grid-column: 2;
-      grid-row: 1;
-      display: flex;
-      align-items: flex-start;
-      justify-content: center;
-      padding-top: 8px;
-    }
-
-    .hero-text h4 {
-      font-size: 18px;
-      font-weight: 500;
-      color: #f2b6ff;
-      margin-bottom: 15px;
-    }
-
-    .hero-text h1 {
-      font-size: 58px;
-      line-height: 1.15;
-      margin-bottom: 18px;
-    }
-
-    .hero-text h1 span {
-      color: #f2b6ff;
-    }
-
-    .hero-text p {
-      max-width: 620px;
-      color: #ece1ee;
-      font-size: 17px;
-      margin-bottom: 30px;
-    }
-
-    .hero-buttons {
-      display: flex;
-      gap: 16px;
-      flex-wrap: wrap;
-      margin-bottom: 30px;
-    }
-
-    .btn {
-      display: inline-block;
-      padding: 14px 28px;
-      border-radius: 40px;
-      font-weight: 700;
-      transition: 0.3s ease;
-      border: 2px solid transparent;
-    }
-
-    .btn-primary {
-      background: #f2b6ff;
-      color: #411C45;
-    }
-
-    .btn-primary:hover {
-      background: transparent;
-      border-color: #f2b6ff;
-      color: #fff;
-    }
-
-    .btn-outline {
-      border: 2px solid rgba(255,255,255,0.35);
-      color: #fff;
-    }
-
-    .btn-outline:hover {
-      border-color: #f2b6ff;
-      color: #f2b6ff;
-    }
-
-    .hero-stats {
-      display: flex;
-      gap: 30px;
-      flex-wrap: wrap;
-      margin-top: 10px;
-    }
-
-    .hero-stats div h3 {
-      font-size: 28px;
-      color: #fff;
-    }
-
-    .hero-stats div p {
-      margin: 0;
-      font-size: 14px;
-      color: #dac8dd;
-    }
-
-    .hero-card {
-      background: rgba(255,255,255,0.08);
-      border: 1px solid rgba(255,255,255,0.12);
-      backdrop-filter: blur(8px);
-      padding: 30px;
-      border-radius: 24px;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-    }
-
-    .hero-card h3 {
-      font-size: 24px;
-      margin-bottom: 18px;
-      color: #fff;
-    }
-
-    .hero-card ul {
-      list-style: none;
-    }
-
-    .hero-card ul li {
-      padding: 12px 0;
-      border-bottom: 1px solid rgba(255,255,255,0.1);
-      color: #f4ebf5;
-    }
-
-    .hero-card ul li:last-child {
-      border-bottom: none;
-    }
-
-    section {
-      padding: 90px 0;
-    }
-
-    .section-title {
-      text-align: center;
-      margin-bottom: 50px;
-    }
-
-    .section-title h2 {
-      font-size: 38px;
-      color: #411C45;
-      margin-bottom: 10px;
-    }
-
-    .section-title p {
-      max-width: 700px;
-      margin: auto;
-      color: #666;
-    }
-
-    .about-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 35px;
-    }
-
-    .about-box, .service-card, .project-card, .contact-box {
-      background: #fff;
-      padding: 30px;
-      border-radius: 22px;
-      box-shadow: 0 10px 35px rgba(65, 28, 69, 0.08);
-      transition: 0.3s ease;
-    }
-
-    /* Ensure project cards contain thumbnails and prevent overflow */
-    .project-card {
-      position: relative;
-      overflow: hidden;
-    }
-
-    .about-box:hover, .service-card:hover, .project-card:hover, .contact-box:hover {
-      transform: translateY(-6px);
-    }
-
-    .about-box h3 {
-      color: #411C45;
-      margin-bottom: 16px;
-      font-size: 24px;
-    }
-
-    .about-box p {
-      color: #555;
-      margin-bottom: 14px;
-    }
-
-    .skills {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 18px;
-    }
-
-    .skills span {
-      background: #f3e8f5;
-      color: #411C45;
-      padding: 10px 16px;
-      border-radius: 30px;
-      font-size: 14px;
-      font-weight: 600;
-    }
-
-    .services-grid,
-    .projects-grid,
-    .contact-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 25px;
-    }
-
-    .service-card h3,
-    .project-card h3,
-    .contact-box h3 {
-      color: #411C45;
-      margin-bottom: 14px;
-      font-size: 22px;
-    }
-
-    .service-card p,
-    .project-card p,
-    .contact-box p {
-      color: #666;
-      margin-bottom: 12px;
-    }
-
-    .project-tag {
-      display: inline-block;
-      margin-top: 8px;
-      padding: 8px 14px;
-      border-radius: 20px;
-      background: #f3e8f5;
-      color: #411C45;
-      font-size: 13px;
-      font-weight: 700;
-    }
-
-    /* Project thumbnails / lightbox */
-    .project-card img.project-thumb {
-      width: 100%;
-      height: 180px;
-      object-fit: cover;
-      border-radius: 12px;
-      margin-bottom: 12px;
-      cursor: pointer;
-    }
-
-    /* Small inline gallery for Social Media Marketing project */
-    .smm-thumbs {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 12px;
-      flex-wrap: nowrap;
-      align-items: center;
-      width: 100%;
-    }
-
-    .smm-thumbs img {
-      flex: 1 1 0;
-      max-width: calc((100% - 24px) / 4);
-      min-width: 0;
-      height: 86px;
-      object-fit: cover;
-      border-radius: 8px;
-      cursor: pointer;
-      display: block;
-      box-sizing: border-box;
-    }
-
-    /* Lightbox modal */
-    .modal {
-      position: fixed;
-      inset: 0;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      background: rgba(0,0,0,0.6);
-      z-index: 2000;
-      padding: 20px;
-    }
-
-    .modal.open { display: flex; }
-
-    .modal-content {
-      max-width: 1000px;
-      width: 100%;
-      background: #fff;
-      border-radius: 12px;
-      padding: 18px;
-      box-shadow: 0 30px 60px rgba(0,0,0,0.4);
-      text-align: left;
-    }
-
-    .modal-content img { width: 100%; height: auto; border-radius: 8px; }
-
-    .modal-close {
-      display: inline-block;
-      margin-top: 10px;
-      padding: 8px 14px;
-      background: #411C45;
-      color: #fff;
-      border-radius: 8px;
-      cursor: pointer;
-    }
-
-    .contact-box a {
-      color: #411C45;
-      font-weight: 700;
-    }
-
-    footer {
-      background: #2c102f;
-      color: #ddd;
-      text-align: center;
-      padding: 24px 15px;
-    }
-
-    @media (max-width: 992px) {
-      .about-grid,
-      .services-grid,
-      .projects-grid,
-      .contact-grid {
-        grid-template-columns: 1fr;
-      }
-
-      /* Keep hero as two columns on tablet and smaller screens
-         but reduce column ratio and spacing so layout fits */
-      .hero-content {
-        grid-template-columns: 1fr 0.9fr;
-        gap: 18px;
-        align-items: start;
-      }
-
-      .hero-text h1 {
-        font-size: 44px;
-      }
-    }
-
-    @media (max-width: 768px) {
-      .navbar {
-        flex-direction: column;
-        gap: 14px;
-      }
-
-      nav ul {
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 16px;
-      }
-
-      .hero {
-        min-height: auto;
-        padding: 40px 0 60px;
-      }
-
-      /* Keep hero two-column layout on small phones as well */
-      .hero-content {
-        grid-template-columns: 1fr 0.9fr;
-        gap: 14px;
-      }
-
-      .profile-img { width: 140px; height: 140px; border-radius: 50%; }
-
-      .hero-text h1 {
-        font-size: 36px;
-      }
-
-      .section-title h2 {
-        font-size: 30px;
-      }
-    }
-
-    /* Mobile header adjustments */
-    @media (max-width: 768px) {
-      header { height: 64px; }
-      body { padding-top: 64px; }
-
-      .logo { font-size: 22px; }
-
-      /* show the hamburger and hide desktop nav
-        show nav when `.open` class is applied by JS */
-      .menu-toggle { display: inline-flex; position: absolute; left: 14px; top: 50%; transform: translateY(-50%); z-index:1201; }
-      /* logo remains centered via absolute positioning */
-      .logo { order: 2; margin-left: 8px; pointer-events: none; }
-      nav { position: absolute; top: 64px; left: 0; right: 0; display: none; background: #411C45; padding: 10px 0; box-shadow: 0 8px 20px rgba(0,0,0,0.18); transition: transform .22s ease, opacity .22s ease; transform-origin: top; }
-      nav.open { display: block; opacity:1; transform: translateY(0); }
-      nav.hidden { opacity:0; transform: translateY(-6px); }
-      nav ul { flex-direction: column; gap: 0; align-items: stretch; padding: 0 18px; }
-      nav ul li { border-bottom: 1px solid rgba(255,255,255,0.04); }
-      nav ul li a { display: block; padding: 12px 6px; font-size: 16px; }
-
-      /* Improved mobile hero spacing and typography */
-      .hero { padding: 24px 0 40px; }
-      .hero-content { grid-template-columns: 1fr 0.85fr; gap: 16px; align-items: start; }
-      .hero-text { max-width: 380px; padding-right: 6px; }
-      .hero-text h4 { font-size: 14px; letter-spacing: 0.4px; margin-bottom: 8px; color: #f2b6ff; }
-      .hero-text h1 { font-size: 28px; line-height: 1.05; font-weight: 800; margin: 0 0 10px; }
-      .hero-text p { font-size: 15px; color: #efe3ef; margin-bottom: 16px; max-width: 40ch; line-height: 1.4; }
-
-      /* Buttons: stack on narrow devices but keep close and prominent */
-      .hero-buttons { gap: 12px; display: flex; align-items: center; }
-      .hero-buttons .btn-primary { padding: 12px 22px; font-size: 15px; border-radius: 36px; }
-      .hero-buttons .btn-outline { padding: 10px 18px; font-size: 14px; border-radius: 36px; }
-
-      /* Keep the profile image adjacent and visually tied to text */
-      .hero-image { align-items: flex-start; padding-top: 6px; }
-      .profile-img { width: 120px; height: 120px; border-radius: 50%; transform: translateY(-6px); border: 4px solid rgba(242,182,255,0.12); box-shadow: 0 10px 30px rgba(0,0,0,0.18); }
-    }
-
-    /* Very small screens: preserve two-column hero but reduce image size */
-    @media (max-width: 480px) {
-      .hero-content {
-        grid-template-columns: 1fr 0.8fr;
-        gap: 12px;
-      }
-
-      .profile-img { width: 96px; height: 96px; border-radius: 50%; }
-      .hero-text h1 { font-size: 24px; }
-      .hero-text p { font-size: 14px; max-width: 36ch; }
-      .hero-buttons { flex-direction: column; align-items: flex-start; }
-      .hero-buttons .btn { width: auto; }
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Aleena Fatima | WordPress Developer</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    /* ===== Color tokens ===== */
+    --void:#050816;
+    --void-2:#080B1E;
+    --panel:#0D1130;
+    --panel-2:#11163C;
+    --glass: rgba(18, 22, 56, 0.55);
+    --glass-light: rgba(255,255,255,0.04);
+    --line: rgba(154, 149, 184, 0.14);
+    --line-strong: rgba(154, 149, 184, 0.28);
+
+    --blue:#3D5AFE;
+    --blue-soft:#7C92FF;
+    --purple:#7B2FFF;
+    --purple-soft:#A876FF;
+    --cyan:#00E5FF;
+    --pink:#FF2D78;
+
+    --grad-main: linear-gradient(135deg, var(--blue) 0%, var(--purple) 55%, var(--pink) 100%);
+    --grad-cyan: linear-gradient(135deg, var(--cyan) 0%, var(--blue) 100%);
+    --grad-text: linear-gradient(135deg, #8FA2FF 0%, #C9A8FF 50%, #FF8FC0 100%);
+
+    --text-100:#F5F3FF;
+    --text-300:#B9B4D6;
+    --text-500:#7C7896;
+
+    --font-display:'Space Grotesk', 'Segoe UI', sans-serif;
+    --font-body:'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-mono:'JetBrains Mono', 'Courier New', monospace;
+
+    --header-h:76px;
+    --container-w:1200px;
+    --radius:18px;
+    --radius-sm:12px;
+  }
+
+  *{ margin:0; padding:0; box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+
+  body{
+    background:var(--void);
+    color:var(--text-300);
+    font-family:var(--font-body);
+    line-height:1.7;
+    padding-top:var(--header-h);
+    -webkit-font-smoothing:antialiased;
+    position:relative;
+    overflow-x:hidden;
+  }
+
+  /* ambient animated mesh backdrop */
+  body::before{
+    content:"";
+    position:fixed;
+    inset:0;
+    z-index:-2;
+    background:
+      radial-gradient(900px 600px at 12% -8%, rgba(123,47,255,0.22), transparent 60%),
+      radial-gradient(800px 600px at 100% 10%, rgba(61,90,254,0.18), transparent 60%),
+      radial-gradient(700px 700px at 50% 100%, rgba(0,229,255,0.10), transparent 60%),
+      radial-gradient(600px 500px at 90% 80%, rgba(255,45,120,0.10), transparent 60%);
+    animation:meshDrift 22s ease-in-out infinite alternate;
+  }
+  body::after{
+    content:"";
+    position:fixed;
+    inset:0;
+    z-index:-1;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.012) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.012) 1px, transparent 1px);
+    background-size:42px 42px;
+    pointer-events:none;
+  }
+  @keyframes meshDrift{ from{ transform:translate(0,0) scale(1); } to{ transform:translate(-2%, -3%) scale(1.06); } }
+
+  a{ text-decoration:none; color:inherit; }
+  img{ max-width:100%; display:block; }
+  ul{ list-style:none; }
+  button{ font-family:inherit; }
+
+  a:focus-visible, button:focus-visible, input:focus-visible{
+    outline:2px solid var(--cyan);
+    outline-offset:3px;
+    border-radius:3px;
+  }
+
+  .container{ width:90%; max-width:var(--container-w); margin:auto; }
+  .container.navbar{ position:relative; }
+
+  /* ===== Section label — code-comment styled ===== */
+  .label{
+    display:inline-flex; align-items:center; gap:10px;
+    font-family:var(--font-mono);
+    font-size:12px;
+    letter-spacing:0.04em;
+    color:var(--cyan);
+    font-weight:500;
+  }
+  .label::before{ content:"//"; color:var(--text-500); }
+  .label-center{ justify-content:center; width:fit-content; margin:0 auto 18px; }
+
+  /* ===== Header ===== */
+  header{
+    position:fixed;
+    top:14px; left:0; right:0;
+    width:100%;
+    z-index:1000;
+    display:flex;
+    justify-content:center;
+    pointer-events:none;
+  }
+  .navbar{
+    pointer-events:auto;
+    display:flex; justify-content:space-between; align-items:center;
+    height:60px;
+    width:92%;
+    max-width:1180px;
+    margin:0 auto;
+    padding:0 10px 0 22px;
+    background:rgba(13, 17, 48, 0.62);
+    backdrop-filter:blur(18px) saturate(160%);
+    border:1px solid var(--line-strong);
+    border-radius:999px;
+    box-shadow:0 18px 40px rgba(5,8,22,0.5), inset 0 1px 0 rgba(255,255,255,0.05);
+    transition:border-color .3s ease, box-shadow .3s ease;
+  }
+  .navbar:hover{ border-color:rgba(124,146,255,0.4); }
+
+  .menu-toggle{
+    display:none;
+    background:transparent; border:0; cursor:pointer; padding:10px;
+    z-index:1201;
+  }
+  .menu-toggle .hamburger{ display:inline-block; width:20px; height:16px; position:relative; }
+  .menu-toggle .hamburger span{ position:absolute; left:0; right:0; height:2px; border-radius:2px; background:var(--text-100); transition:transform .2s ease, opacity .2s ease, background .2s ease; }
+  .menu-toggle .hamburger span:nth-child(1){ top:0; }
+  .menu-toggle .hamburger span:nth-child(2){ top:7px; }
+  .menu-toggle .hamburger span:nth-child(3){ top:14px; }
+  .menu-toggle.open .hamburger span:nth-child(1){ transform:translateY(7px) rotate(45deg); background:var(--cyan); }
+  .menu-toggle.open .hamburger span:nth-child(2){ opacity:0; }
+  .menu-toggle.open .hamburger span:nth-child(3){ transform:translateY(-7px) rotate(-45deg); background:var(--cyan); }
+
+  .logo{
+    font-family:var(--font-display);
+    font-size:19px;
+    font-weight:700;
+    letter-spacing:-0.01em;
+    color:var(--text-100);
+    white-space:nowrap;
+    display:flex; align-items:center; gap:8px;
+  }
+  .logo .dot-status{ width:7px; height:7px; border-radius:50%; background:var(--cyan); box-shadow:0 0 10px var(--cyan); animation:pulseDot 2s ease-in-out infinite; flex-shrink:0; }
+  .logo em{ font-style:normal; background:var(--grad-text); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  @keyframes pulseDot{ 0%,100%{ opacity:1; transform:scale(1); } 50%{ opacity:0.5; transform:scale(0.8); } }
+
+  .navbar nav{ margin-left:auto; }
+  nav ul{ display:flex; gap:2px; align-items:center; }
+  nav ul li a{
+    display:inline-block;
+    font-family:var(--font-mono);
+    color:var(--text-500);
+    font-size:13px;
+    font-weight:500;
+    padding:9px 15px;
+    border-radius:999px;
+    position:relative;
+    transition:color .25s ease, background .25s ease;
+  }
+  nav ul li a:hover{ color:var(--text-100); background:var(--glass-light); }
+  nav ul li a.active{ color:var(--text-100); background:rgba(124,146,255,0.12); }
+
+  .nav-cta{
+    margin-left:8px;
+    padding:10px 20px !important;
+    background:var(--grad-main);
+    color:#fff !important;
+    font-weight:600;
+    font-family:var(--font-body) !important;
+    font-size:13.5px !important;
+    box-shadow:0 8px 20px rgba(123,47,255,0.35);
+    transition:transform .25s ease, box-shadow .25s ease !important;
+  }
+  .nav-cta:hover{ transform:translateY(-2px); box-shadow:0 12px 26px rgba(123,47,255,0.5); background:var(--grad-main) !important; }
+
+  /* ===== Hero ===== */
+  .hero{
+    min-height:92vh;
+    display:flex;
+    align-items:center;
+    padding:120px 0 90px;
+    position:relative;
+    overflow:hidden;
+  }
+  .hero-orb{
+    position:absolute;
+    border-radius:50%;
+    filter:blur(60px);
+    z-index:0;
+    opacity:0.55;
+  }
+  .orb-1{ width:380px; height:380px; background:radial-gradient(circle, rgba(123,47,255,0.55), transparent 70%); top:-10%; right:5%; animation:floatOrb 9s ease-in-out infinite; }
+  .orb-2{ width:300px; height:300px; background:radial-gradient(circle, rgba(0,229,255,0.4), transparent 70%); bottom:0%; left:0%; animation:floatOrb 11s ease-in-out infinite reverse; }
+  @keyframes floatOrb{ 0%,100%{ transform:translate(0,0); } 50%{ transform:translate(-18px, 22px); } }
+
+  .particle{
+    position:absolute; border-radius:50%;
+    background:var(--cyan);
+    opacity:0.5;
+    z-index:0;
+    animation:particleFloat linear infinite;
+  }
+  @keyframes particleFloat{
+    0%{ transform:translateY(0) translateX(0); opacity:0; }
+    10%{ opacity:0.6; }
+    90%{ opacity:0.4; }
+    100%{ transform:translateY(-90vh) translateX(20px); opacity:0; }
+  }
+
+  .hero-content{
+    display:grid;
+    grid-template-columns:1.15fr 0.85fr;
+    gap:40px;
+    align-items:center;
+    position:relative;
+    z-index:1;
+  }
+  .hero-text{ grid-column:1; grid-row:1; }
+  .hero-card{ grid-column:1/-1; grid-row:2; margin-top:60px; }
+
+  .availability-badge{
+    display:inline-flex; align-items:center; gap:10px;
+    padding:8px 16px 8px 10px;
+    border-radius:999px;
+    background:var(--glass);
+    border:1px solid var(--line-strong);
+    backdrop-filter:blur(10px);
+    font-family:var(--font-mono);
+    font-size:12px;
+    color:var(--text-300);
+    margin-bottom:28px;
+  }
+  .availability-badge .pulse-wrap{ position:relative; width:9px; height:9px; }
+  .availability-badge .pulse-wrap::before, .availability-badge .pulse-wrap::after{
+    content:""; position:absolute; inset:0; border-radius:50%; background:#4ADE80;
+  }
+  .availability-badge .pulse-wrap::after{ animation:ping 1.8s cubic-bezier(0,0,0.2,1) infinite; }
+
+  @keyframes ping{ 0%{ transform:scale(1); opacity:0.7; } 75%,100%{ transform:scale(2.6); opacity:0; } }
+
+  .hero-text h1{
+    font-family:var(--font-display);
+    font-size:clamp(40px, 5.4vw, 70px);
+    font-weight:700;
+    line-height:1.06;
+    letter-spacing:-0.02em;
+    color:var(--text-100);
+    margin-bottom:24px;
+  }
+  .hero-text h1 .grad{
+    background:var(--grad-text);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+    background-size:200% auto;
+    animation:gradShift 6s ease infinite;
+  }
+  @keyframes gradShift{ 0%,100%{ background-position:0% 50%; } 50%{ background-position:100% 50%; } }
+
+  .hero-text p.sub{ max-width:540px; color:var(--text-300); font-size:17px; margin-bottom:36px; }
+
+  .hero-buttons{ display:flex; gap:14px; flex-wrap:wrap; margin-bottom:40px; }
+
+  .btn{
+    display:inline-flex; align-items:center; gap:9px;
+    padding:15px 30px;
+    border-radius:12px;
+    font-weight:600;
+    font-size:14.5px;
+    font-family:var(--font-body);
+    transition:transform .25s ease, box-shadow .25s ease, background .25s ease, color .25s ease, border-color .25s ease;
+    border:1.5px solid transparent;
+    position:relative;
+    cursor:pointer;
+  }
+  .btn-primary{
+    background:var(--grad-main);
+    background-size:160% 160%;
+    color:#fff;
+    box-shadow:0 18px 40px rgba(123,47,255,0.3);
+  }
+  .btn-primary:hover{ transform:translateY(-3px); box-shadow:0 22px 48px rgba(123,47,255,0.45); background-position:90% 10%; }
+  .btn-outline{
+    border-color:var(--line-strong);
+    color:var(--text-100);
+    background:var(--glass);
+    backdrop-filter:blur(10px);
+  }
+  .btn-outline:hover{ border-color:var(--cyan); color:var(--cyan); transform:translateY(-3px); box-shadow:0 14px 30px rgba(0,229,255,0.15); }
+
+  .hero-socials{ display:flex; gap:10px; margin-bottom:8px; }
+  .hero-socials a{
+    width:40px; height:40px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    background:var(--glass);
+    border:1px solid var(--line);
+    transition:transform .25s ease, border-color .25s ease, background .25s ease;
+  }
+  .hero-socials a:hover{ transform:translateY(-3px); border-color:var(--cyan); background:rgba(0,229,255,0.08); }
+  .hero-socials svg{ width:17px; height:17px; stroke:var(--text-300); fill:none; stroke-width:1.8; transition:stroke .25s ease; }
+  .hero-socials a:hover svg{ stroke:var(--cyan); }
+
+  .hero-stats{ display:flex; gap:36px; flex-wrap:wrap; margin-top:36px; }
+  .hero-stats div{ position:relative; padding-left:18px; }
+  .hero-stats div::before{ content:""; position:absolute; left:0; top:2px; bottom:2px; width:2px; border-radius:2px; background:var(--grad-cyan); }
+  .hero-stats div h3{ font-family:var(--font-display); font-size:30px; font-weight:700; color:var(--text-100); }
+  .hero-stats div p{ font-family:var(--font-mono); font-size:11px; color:var(--text-500); letter-spacing:0.05em; text-transform:uppercase; margin-top:3px; }
+
+  /* Hero portrait */
+  .hero-image{ grid-column:2; grid-row:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-start; position:relative; }
+  .portrait-frame{
+    width:260px; height:260px;
+    border-radius:26px;
+    overflow:hidden;
+    position:relative;
+    padding:3px;
+    background:var(--grad-main);
+  }
+  .portrait-frame .inner{
+    width:100%; height:100%;
+    border-radius:23px;
+    overflow:hidden;
+    background:var(--void);
+  }
+  .portrait-frame img{ width:100%; height:100%; object-fit:cover; display:block; }
+  .portrait-frame{ box-shadow:0 35px 70px rgba(123,47,255,0.25), 0 10px 30px rgba(0,0,0,0.5); animation:floatPortrait 6s ease-in-out infinite; }
+  @keyframes floatPortrait{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-10px); } }
+
+  .float-chip{
+    position:absolute;
+    display:flex; align-items:center; gap:8px;
+    background:var(--glass);
+    border:1px solid var(--line-strong);
+    backdrop-filter:blur(14px);
+    border-radius:12px;
+    padding:9px 14px;
+    font-family:var(--font-mono);
+    font-size:11.5px;
+    color:var(--text-100);
+    box-shadow:0 16px 32px rgba(5,8,22,0.5);
+  }
+  .chip-1{ top:14px; left:-32px; animation:chipFloat 5s ease-in-out infinite; }
+  .chip-2{ bottom:48px; right:-36px; animation:chipFloat 5.5s ease-in-out infinite reverse; }
+  @keyframes chipFloat{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-8px); } }
+  .float-chip .ic{ width:14px; height:14px; stroke:var(--cyan); fill:none; stroke-width:2.2; }
+
+  .portrait-cap{
+    margin-top:38px;
+    display:flex; flex-direction:column; align-items:center; gap:6px;
+    text-align:center;
+  }
+  .portrait-cap span{
+    font-family:var(--font-mono);
+    font-size:11.5px;
+    letter-spacing:0.05em;
+    color:var(--text-500);
+  }
+  .portrait-cap span.loc{ color:var(--text-100); font-weight:600; }
+
+  /* Hero card — terminal-style capabilities panel */
+  .hero-card{
+    background:var(--glass);
+    backdrop-filter:blur(20px) saturate(160%);
+    border:1px solid var(--line-strong);
+    border-radius:var(--radius);
+    box-shadow:0 40px 80px rgba(5,8,22,0.55), inset 0 1px 0 rgba(255,255,255,0.04);
+    overflow:hidden;
+    position:relative;
+  }
+  .hero-card::before{
+    content:"";
+    position:absolute; inset:0;
+    background:linear-gradient(120deg, rgba(123,47,255,0.06), transparent 40%, rgba(0,229,255,0.05));
+    pointer-events:none;
+  }
+  .hero-card-head{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:16px 26px;
+    border-bottom:1px solid var(--line);
+    position:relative; z-index:1;
+  }
+  .term-dots{ display:flex; gap:7px; }
+  .term-dots span{ width:10px; height:10px; border-radius:50%; }
+  .term-dots span:nth-child(1){ background:#FF5F56; }
+  .term-dots span:nth-child(2){ background:#FFBD2E; }
+  .term-dots span:nth-child(3){ background:#27C93F; }
+  .hero-card-head .path{ font-family:var(--font-mono); font-size:11.5px; color:var(--text-500); }
+
+  .hero-card-body{ padding:28px 28px 32px; position:relative; z-index:1; }
+  .hero-card h3{ font-family:var(--font-display); font-size:22px; font-weight:700; margin-bottom:20px; color:var(--text-100); }
+  .hero-card ul{ display:grid; grid-template-columns:1fr 1fr; gap:6px 28px; }
+  .hero-card ul li{ display:flex; align-items:flex-start; gap:11px; padding:10px 0; color:var(--text-300); font-size:14.5px; transition:color .2s ease; }
+  .hero-card ul li:hover{ color:var(--text-100); }
+  .hero-card ul li .check{
+    width:20px; height:20px; border-radius:6px; flex-shrink:0; margin-top:1px;
+    background:rgba(0,229,255,0.12); border:1px solid rgba(0,229,255,0.3);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .hero-card ul li svg{ width:11px; height:11px; stroke:var(--cyan); fill:none; stroke-width:3; stroke-linecap:round; stroke-linejoin:round; }
+
+  /* ===== Generic sections ===== */
+  section{ padding:110px 0; position:relative; }
+
+  .section-title{ text-align:center; margin-bottom:60px; }
+  .section-title h2{ font-family:var(--font-display); font-size:clamp(32px, 3.6vw, 46px); font-weight:700; color:var(--text-100); margin-bottom:14px; letter-spacing:-0.01em; }
+  .section-title p{ max-width:580px; margin:auto; color:var(--text-500); font-size:15.5px; }
+
+  .reveal{ opacity:0; transform:translateY(22px); transition:opacity .7s cubic-bezier(0.16,1,0.3,1), transform .7s cubic-bezier(0.16,1,0.3,1); }
+  .reveal.visible{ opacity:1; transform:translateY(0); }
+
+  /* Glass card base */
+  .glass-card{
+    background:var(--glass);
+    backdrop-filter:blur(16px) saturate(150%);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    position:relative;
+    overflow:hidden;
+    transition:transform .35s cubic-bezier(0.16,1,0.3,1), box-shadow .35s ease, border-color .35s ease;
+  }
+  .glass-card::before{
+    content:"";
+    position:absolute; inset:-1px;
+    border-radius:inherit;
+    background:var(--grad-main);
+    opacity:0;
+    z-index:-1;
+    transition:opacity .35s ease;
+  }
+  .glass-card:hover{ transform:translateY(-8px); box-shadow:0 30px 60px rgba(5,8,22,0.5); border-color:transparent; }
+  .glass-card:hover::before{ opacity:1; }
+
+  /* About */
+  .about-wrap{ display:grid; grid-template-columns:1fr 1fr; gap:28px; margin-bottom:64px; }
+  .about-box{ padding:38px; }
+  .about-box h3{ font-family:var(--font-display); color:var(--text-100); font-size:23px; font-weight:700; margin-bottom:16px; }
+  .about-box p{ color:var(--text-300); margin-bottom:12px; font-size:15px; }
+
+  .skills{ display:flex; flex-wrap:wrap; gap:10px; margin-top:18px; }
+  .skills span{
+    font-family:var(--font-mono);
+    background:rgba(255,255,255,0.03);
+    border:1px solid var(--line);
+    color:var(--cyan);
+    padding:9px 16px;
+    border-radius:999px;
+    font-size:12.5px;
+    font-weight:500;
+    transition:background .25s ease, color .25s ease, border-color .25s ease, transform .25s ease;
+  }
+  .skills span:hover{ background:rgba(0,229,255,0.1); border-color:var(--cyan); transform:translateY(-2px); }
+
+  /* timeline */
+  .timeline{ position:relative; padding-left:32px; }
+  .timeline::before{ content:""; position:absolute; left:6px; top:6px; bottom:6px; width:2px; background:linear-gradient(to bottom, var(--cyan), var(--purple), transparent); }
+  .timeline-item{ position:relative; padding-bottom:32px; }
+  .timeline-item:last-child{ padding-bottom:0; }
+  .timeline-item::before{ content:""; position:absolute; left:-32px; top:2px; width:13px; height:13px; border-radius:50%; background:var(--void); border:2px solid var(--cyan); box-shadow:0 0 0 4px rgba(0,229,255,0.12); }
+  .timeline-item h4{ font-family:var(--font-display); color:var(--text-100); font-size:16.5px; font-weight:700; margin-bottom:4px; }
+  .timeline-item .meta{ font-family:var(--font-mono); font-size:11.5px; color:var(--purple-soft); margin-bottom:8px; display:block; }
+  .timeline-item p{ font-size:14px; color:var(--text-500); }
+
+  .skill-meters{ margin-top:8px; }
+  .meter-row{ margin-bottom:18px; }
+  .meter-row:last-child{ margin-bottom:0; }
+  .meter-label{ display:flex; justify-content:space-between; margin-bottom:8px; font-size:13.5px; }
+  .meter-label span:first-child{ color:var(--text-100); font-weight:600; }
+  .meter-label span:last-child{ font-family:var(--font-mono); color:var(--cyan); font-size:12px; }
+  .meter-track{ height:7px; border-radius:99px; background:rgba(255,255,255,0.06); overflow:hidden; }
+  .meter-fill{ height:100%; border-radius:99px; background:var(--grad-cyan); width:0%; transition:width 1.4s cubic-bezier(0.16,1,0.3,1); }
+  .meter-row.visible .meter-fill{ width:var(--target); }
+
+  /* Services */
+  .services-grid{ display:grid; grid-template-columns:repeat(3, 1fr); gap:24px; }
+  .service-card{ padding:34px 32px; }
+  .icon-badge{
+    width:52px; height:52px; border-radius:14px;
+    background:linear-gradient(135deg, rgba(123,47,255,0.18), rgba(0,229,255,0.12));
+    border:1px solid var(--line-strong);
+    display:flex; align-items:center; justify-content:center;
+    margin-bottom:22px;
+    position:relative; z-index:1;
+    transition:transform .3s ease, box-shadow .3s ease;
+  }
+  .service-card:hover .icon-badge{ transform:scale(1.08) rotate(-4deg); box-shadow:0 0 24px rgba(0,229,255,0.3); }
+  .icon-badge svg{ width:23px; height:23px; stroke:var(--cyan); fill:none; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; }
+  .service-card h3{ font-family:var(--font-display); color:var(--text-100); font-size:19.5px; font-weight:700; margin-bottom:11px; position:relative; z-index:1; }
+  .service-card p{ color:var(--text-500); font-size:14.5px; position:relative; z-index:1; }
+  .service-num{ font-family:var(--font-mono); font-size:12px; color:var(--text-500); position:absolute; top:28px; right:28px; opacity:0.5; }
+
+  /* Projects */
+  .project-filters{ display:flex; justify-content:center; gap:10px; flex-wrap:wrap; margin-bottom:48px; }
+  .filter-btn{
+    font-family:var(--font-mono); font-size:12.5px; padding:10px 18px; border-radius:999px;
+    border:1px solid var(--line-strong); color:var(--text-500); background:var(--glass);
+    cursor:pointer; transition:all .25s ease;
+  }
+  .filter-btn:hover{ color:var(--text-100); border-color:var(--cyan); }
+  .filter-btn.active{ background:var(--grad-main); color:#fff; border-color:transparent; }
+
+  .projects-grid{ display:grid; grid-template-columns:repeat(3, 1fr); gap:26px; }
+  .project-card{ padding:18px; display:flex; flex-direction:column; }
+  .project-card.hidden{ display:none; }
+
+  .browser-frame{
+    border-radius:12px;
+    overflow:hidden;
+    border:1px solid var(--line);
+    margin-bottom:20px;
+    position:relative;
+  }
+  .browser-bar{
+    display:flex; align-items:center; gap:6px;
+    padding:10px 13px;
+    background:rgba(255,255,255,0.03);
+    border-bottom:1px solid var(--line);
+  }
+  .browser-bar .dot{ width:7px; height:7px; border-radius:50%; background:var(--line-strong); flex-shrink:0; }
+  .browser-bar .url{
+    margin-left:6px;
+    font-family:var(--font-mono);
+    font-size:10.5px;
+    color:var(--text-500);
+    overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+    transition: color .2s ease;
+  }
+  .browser-bar .url:hover{
+    color:var(--cyan);
+  }
+  .live-badge{
+    position:absolute; top:10px; right:10px; z-index:2;
+    display:flex; align-items:center; gap:5px;
+    background:rgba(5,8,22,0.7); backdrop-filter:blur(6px);
+    border:1px solid var(--line-strong);
+    border-radius:999px; padding:5px 10px;
+    font-family:var(--font-mono); font-size:10px; color:#4ADE80;
+    opacity:0; transition:opacity .3s ease, background .25s ease, color .25s ease, border-color .25s ease;
+  }
+  .project-card:hover .live-badge{ opacity:1; }
+  .live-badge:hover{
+    background:var(--cyan);
+    color:#fff;
+    border-color:transparent;
+  }
+  .live-badge .dotlive{ width:5px; height:5px; border-radius:50%; background:#4ADE80; box-shadow:0 0 6px #4ADE80; transition: background .25s ease, box-shadow .25s ease; }
+  .live-badge:hover .dotlive{
+    background:#fff;
+    box-shadow:0 0 6px #fff;
+  }
+
+  .project-card img.project-thumb{
+    width:100%; height:185px;
+    object-fit:cover;
+    display:block;
+    cursor:pointer;
+    transition:transform .5s cubic-bezier(0.16,1,0.3,1), filter .4s ease;
+  }
+  .project-card:hover img.project-thumb{ transform:scale(1.06); }
+
+  .project-tag{
+    display:inline-flex; align-items:center; gap:7px;
+    font-family:var(--font-mono);
+    font-size:11px;
+    letter-spacing:0.04em;
+    color:var(--cyan);
+    margin-bottom:11px;
+    padding:0 4px;
+  }
+
+  .project-card h3{ font-family:var(--font-display); color:var(--text-100); font-size:19px; font-weight:700; margin-bottom:9px; padding:0 4px; }
+  .project-card p{ color:var(--text-500); font-size:14px; margin-bottom:16px; padding:0 4px; flex-grow:1; }
+
+  .project-stats{ display:flex; gap:18px; padding:14px 4px 4px; border-top:1px solid var(--line); margin-top:auto; }
+  .project-stats div{ display:flex; flex-direction:column; gap:2px; }
+  .project-stats div .v{ font-family:var(--font-display); font-weight:700; color:var(--text-100); font-size:15px; }
+  .project-stats div .l{ font-family:var(--font-mono); font-size:9.5px; color:var(--text-500); text-transform:uppercase; letter-spacing:0.04em; }
+
+  .smm-thumbs{ display:flex; gap:6px; flex-wrap:nowrap; align-items:center; width:100%; padding:10px; }
+  .smm-thumbs img{
+    flex:1 1 0; max-width:calc((100% - 18px) / 4); min-width:0;
+    height:84px; object-fit:cover; border-radius:8px; cursor:pointer; display:block; box-sizing:border-box;
+    transition:transform .35s ease;
+  }
+  .smm-thumbs img:hover{ transform:scale(1.07); }
+
+  /* Modal */
+  .modal{
+    position:fixed; inset:0; display:none;
+    align-items:flex-start; justify-content:center;
+    background:rgba(3,4,12,0.92); backdrop-filter:blur(10px);
+    z-index:2000; padding:40px 20px;
+    overflow-y:auto;
+  }
+  .modal::-webkit-scrollbar {
+    width: 8px;
+  }
+  .modal::-webkit-scrollbar-track {
+    background: rgba(255,255,255,0.02);
+  }
+  .modal::-webkit-scrollbar-thumb {
+    background: var(--line-strong);
+    border-radius: 4px;
+  }
+  .modal::-webkit-scrollbar-thumb:hover {
+    background: var(--cyan);
+  }
+  .modal.open{ display:flex; }
+  .modal-content{
+    position:relative; max-width:1000px; width:100%;
+    background:var(--panel); border:1px solid var(--line-strong);
+    border-radius:20px; padding:30px;
+    box-shadow:0 50px 100px rgba(0,0,0,0.8);
+    margin: 20px auto;
+  }
+  .modal-close-top{
+    position:absolute; top:24px; right:24px;
+    display:flex; align-items:center; gap:8px;
+    padding:8px 16px; background:rgba(255,255,255,0.05);
+    border:1px solid var(--line); border-radius:999px;
+    color:var(--text-100); font-family:var(--font-mono);
+    font-size:12px; font-weight:600; cursor:pointer;
+    transition:all .25s ease;
+  }
+  .modal-close-top:hover{
+    background:var(--cyan); color:#fff; border-color:transparent;
+    transform:scale(1.05);
+  }
+  .modal-content h3{ font-family:var(--font-display); margin-bottom:20px; color:var(--text-100); font-size:24px; font-weight:700; padding-right:120px; }
+  .modal-body{ width:100%; border-radius:12px; overflow:hidden; border:1px solid var(--line); background:#050816; }
+  .modal-content img{ width:100%; height:auto; display:block; }
+  .modal-close{ display:inline-block; margin-top:20px; padding:12px 24px; background:var(--grad-main); color:#fff; border-radius:10px; cursor:pointer; font-weight:600; font-size:14px; transition:transform .2s ease, box-shadow .2s ease; border:none; }
+  .modal-close:hover{ transform:translateY(-2px); box-shadow:0 12px 26px rgba(123,47,255,0.4); }
+
+  /* Contact */
+  .contact-grid{ display:grid; grid-template-columns:repeat(3, 1fr); gap:24px; }
+  .contact-box{ padding:36px 28px; text-align:center; }
+  .contact-icon{
+    width:54px; height:54px; border-radius:16px;
+    background:linear-gradient(135deg, rgba(123,47,255,0.18), rgba(0,229,255,0.12));
+    border:1px solid var(--line-strong);
+    display:flex; align-items:center; justify-content:center;
+    margin:0 auto 20px;
+    position:relative; z-index:1;
+  }
+  .contact-icon svg{ width:21px; height:21px; stroke:var(--cyan); fill:none; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; }
+  .contact-box h3{ font-family:var(--font-display); color:var(--text-100); font-size:19px; font-weight:700; margin-bottom:9px; position:relative; z-index:1; }
+  .contact-box p{ color:var(--text-500); font-size:14px; margin-bottom:10px; position:relative; z-index:1; }
+  .contact-box a.contact-link{ color:var(--cyan); font-weight:600; font-size:15px; position:relative; z-index:1; }
+  .contact-box a.contact-link:hover{ color:var(--text-100); }
+  .status-tag{
+    display:inline-flex; align-items:center; gap:7px;
+    font-family:var(--font-mono); font-size:11px; color:#4ADE80;
+    background:rgba(74,222,128,0.08); border:1px solid rgba(74,222,128,0.25);
+    border-radius:999px; padding:5px 12px; margin-top:6px; position:relative; z-index:1;
+  }
+  .status-tag .d{ width:6px; height:6px; border-radius:50%; background:#4ADE80; }
+
+  /* ===== CTA band before footer ===== */
+  .cta-band{
+    padding:0;
+    margin:0 0 0 0;
+  }
+  .cta-band-inner{
+    position:relative;
+    border-radius:28px;
+    overflow:hidden;
+    padding:72px 40px;
+    text-align:center;
+    border:1px solid var(--line-strong);
+    background:
+      radial-gradient(700px 400px at 20% 0%, rgba(123,47,255,0.35), transparent 60%),
+      radial-gradient(700px 400px at 85% 100%, rgba(0,229,255,0.25), transparent 60%),
+      var(--panel);
+  }
+  .cta-band-inner::before{
+    content:"";
+    position:absolute; inset:0;
+    background-image:linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+    background-size:36px 36px;
+    pointer-events:none;
+  }
+  .cta-particle{
+    position:absolute; border-radius:50%; background:var(--cyan); opacity:0.5;
+    animation:particleFloat linear infinite;
+  }
+  .cta-band-inner h2{
+    font-family:var(--font-display); font-size:clamp(30px, 4vw, 48px); font-weight:700;
+    color:var(--text-100); margin-bottom:18px; letter-spacing:-0.01em; position:relative; z-index:1;
+  }
+  .cta-band-inner > p{ max-width:560px; margin:0 auto 36px; color:var(--text-300); font-size:16px; position:relative; z-index:1; }
+  .cta-buttons{ display:flex; gap:16px; justify-content:center; flex-wrap:wrap; margin-bottom:40px; position:relative; z-index:1; }
+  .trust-row{ display:flex; gap:36px; justify-content:center; flex-wrap:wrap; position:relative; z-index:1; }
+  .trust-row div{ display:flex; align-items:center; gap:9px; font-family:var(--font-mono); font-size:12.5px; color:var(--text-500); }
+  .trust-row div svg{ width:16px; height:16px; stroke:var(--cyan); fill:none; stroke-width:2; }
+
+  /* ===== Footer ===== */
+  footer{ position:relative; padding-top:90px; }
+  .footer-grid{
+    display:grid;
+    grid-template-columns: 1.6fr 1fr 1fr 1fr 1.3fr;
+    gap:36px;
+    padding-bottom:60px;
+    border-bottom:1px solid var(--line);
+  }
+  .footer-brand p.tagline{ color:var(--text-100); font-family:var(--font-display); font-size:17px; font-weight:600; margin:18px 0 12px; }
+  .footer-brand p.desc{ font-size:14px; color:var(--text-500); margin-bottom:20px; max-width:280px; }
+  .footer-brand .logo{ margin-bottom:0; }
+  .footer-mini-profile{ display:flex; align-items:center; gap:12px; margin-top:6px; }
+  .footer-mini-profile img{ width:44px; height:44px; border-radius:50%; object-fit:cover; border:2px solid var(--line-strong); }
+  .footer-mini-profile .mp-name{ font-size:13.5px; color:var(--text-100); font-weight:600; }
+  .footer-mini-profile .mp-role{ font-family:var(--font-mono); font-size:11px; color:var(--text-500); }
+
+  .footer-col h4{ font-family:var(--font-display); font-size:14.5px; color:var(--text-100); font-weight:700; margin-bottom:20px; letter-spacing:0.01em; }
+  .footer-col ul li{ margin-bottom:13px; }
+  .footer-col ul li a{ font-size:13.5px; color:var(--text-500); transition:color .2s ease, padding-left .2s ease; display:inline-block; }
+  .footer-col ul li a:hover{ color:var(--cyan); padding-left:4px; }
+
+  .footer-social-col .social-icons{ display:flex; flex-wrap:wrap; gap:10px; margin-top:4px; }
+  .footer-social-col .social-icons a{
+    width:38px; height:38px; border-radius:10px;
+    display:flex; align-items:center; justify-content:center;
+    background:var(--glass-light); border:1px solid var(--line);
+    transition:transform .25s ease, border-color .25s ease, background .25s ease;
+  }
+  .footer-social-col .social-icons a:hover{ transform:translateY(-3px); border-color:var(--cyan); background:rgba(0,229,255,0.1); }
+  .footer-social-col .social-icons svg{ width:16px; height:16px; stroke:var(--text-300); fill:none; stroke-width:1.8; transition:stroke .2s ease; }
+  .footer-social-col .social-icons a:hover svg{ stroke:var(--cyan); }
+
+  .footer-contact-info{ margin-top:18px; }
+  .footer-contact-info li{ display:flex; gap:10px; align-items:flex-start; margin-bottom:13px; font-size:13.5px; color:var(--text-500); }
+  .footer-contact-info li svg{ width:15px; height:15px; stroke:var(--cyan); fill:none; stroke-width:2; flex-shrink:0; margin-top:2px; }
+
+  .newsletter-row{
+    grid-column:1/-1;
+    display:flex; align-items:center; justify-content:space-between; gap:28px;
+    flex-wrap:wrap;
+    padding:30px 0 56px;
+  }
+  .newsletter-text h4{ font-family:var(--font-display); font-size:18px; color:var(--text-100); font-weight:700; margin-bottom:6px; }
+  .newsletter-text p{ font-size:13.5px; color:var(--text-500); }
+  .newsletter-form{ display:flex; gap:10px; background:var(--glass); border:1px solid var(--line-strong); padding:6px 6px 6px 18px; border-radius:999px; backdrop-filter:blur(10px); flex-wrap:nowrap; min-width:340px; }
+  .newsletter-form input{
+    background:transparent; border:none; outline:none; color:var(--text-100);
+    font-family:var(--font-body); font-size:13.5px; flex:1; min-width:0;
+  }
+  .newsletter-form input::placeholder{ color:var(--text-500); }
+  .newsletter-form button{
+    background:var(--grad-main); color:#fff; border:none; border-radius:999px;
+    padding:11px 22px; font-weight:600; font-size:13px; cursor:pointer; white-space:nowrap;
+    transition:transform .2s ease, box-shadow .2s ease;
+  }
+  .newsletter-form button:hover{ transform:translateY(-1px); box-shadow:0 10px 22px rgba(123,47,255,0.35); }
+
+  .footer-bottom{
+    display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:16px;
+    padding:26px 0 36px;
+  }
+  .footer-bottom-links{ display:flex; align-items:center; gap:22px; flex-wrap:wrap; }
+  .footer-bottom-links a{ font-family:var(--font-mono); font-size:12px; color:var(--text-500); transition:color .2s ease; }
+  .footer-bottom-links a:hover{ color:var(--text-100); }
+  .footer-bottom p.copy{ font-family:var(--font-mono); font-size:12px; color:var(--text-500); }
+  .made-with{ font-family:var(--font-mono); font-size:12px; color:var(--text-500); display:flex; align-items:center; gap:5px; }
+  .made-with span.heart{ color:var(--pink); }
+
+  .to-top{
+    width:42px; height:42px; border-radius:50%;
+    background:var(--glass); border:1px solid var(--line-strong);
+    display:flex; align-items:center; justify-content:center;
+    cursor:pointer; transition:transform .25s ease, border-color .25s ease, background .25s ease;
+  }
+  .to-top:hover{ transform:translateY(-4px); border-color:var(--cyan); background:rgba(0,229,255,0.1); }
+  .to-top svg{ width:16px; height:16px; stroke:var(--cyan); fill:none; stroke-width:2.2; }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ transition:none !important; animation:none !important; }
+    .reveal{ opacity:1; transform:none; }
+    body::before{ animation:none; }
+  }
+
+  /* ===== Responsive ===== */
+  @media (max-width:992px){
+    .about-wrap, .services-grid, .projects-grid, .contact-grid{ grid-template-columns:1fr; }
+    .hero-content{ grid-template-columns:1fr 0.85fr; gap:20px; align-items:start; }
+    .hero-card ul{ grid-template-columns:1fr; }
+    .footer-grid{ grid-template-columns:1fr 1fr; gap:40px 28px; }
+    .footer-brand{ grid-column:1/-1; }
+    .float-chip{ display:none; }
+  }
+
+  @media (max-width:768px){
+    nav ul{ flex-wrap:wrap; justify-content:center; gap:16px; }
+    .hero{ min-height:auto; padding:36px 0 50px; }
+    .hero-content{ grid-template-columns:1fr 0.8fr; gap:14px; }
+    .portrait-frame{ width:150px; height:150px; }
+    .section-title h2{ font-size:30px; }
+    .cta-band-inner{ padding:50px 24px; }
+  }
+
+  @media (max-width:768px){
+    header{ top:10px; }
+    .navbar{ height:58px; width:94%; padding:0 8px 0 18px; }
+    body{ padding-top:78px; }
+    .logo{ font-size:16px; }
+    .menu-toggle{ display:inline-flex; }
+    nav{ position:fixed; top:78px; left:3%; right:3%; display:none; background:rgba(13,17,48,0.92); backdrop-filter:blur(20px); border:1px solid var(--line-strong); border-radius:18px; padding:10px; box-shadow:0 20px 50px rgba(0,0,0,0.5); }
+    nav.open{ display:block; animation:navIn .22s ease both; }
+    nav ul{ flex-direction:column; gap:2px; align-items:stretch; }
+    nav ul li a{ display:block; padding:13px 14px; font-size:14.5px; border-radius:10px; }
+    .nav-cta{ margin:6px 0 0; text-align:center; justify-content:center; }
+
+    .hero{ padding:24px 0 40px; }
+    .hero-content{ grid-template-columns:1fr 0.78fr; gap:14px; align-items:start; }
+    .hero-text{ max-width:380px; }
+    .hero-text h1{ font-size:28px; line-height:1.14; margin-bottom:14px; }
+    .hero-text p.sub{ font-size:14.5px; margin-bottom:22px; max-width:40ch; }
+    .availability-badge{ margin-bottom:16px; font-size:11px; }
+    .hero-buttons{ gap:10px; }
+    .hero-buttons .btn{ padding:12px 18px; font-size:13.5px; }
+    .hero-stats{ gap:20px; margin-top:24px; }
+    .hero-stats div h3{ font-size:22px; }
+    .portrait-frame{ width:108px; height:108px; border-radius:18px; }
+    .portrait-cap{ display:none; }
+    .hero-card{ margin-top:30px; }
+    .browser-bar .url{ display:none; }
+    .hero-socials{ margin-top:10px; }
+
+    .footer-grid{ grid-template-columns:1fr 1fr; gap:36px 24px; }
+    .footer-brand{ grid-column:1/-1; }
+    .newsletter-row{ flex-direction:column; align-items:flex-start; }
+    .newsletter-form{ width:100%; min-width:0; }
+    .footer-bottom{ flex-direction:column; align-items:flex-start; }
+  }
+
+  @media (max-width:480px){
+    .hero-content{ grid-template-columns:1fr 0.7fr; gap:10px; }
+    .portrait-frame{ width:88px; height:88px; }
+    .hero-text h1{ font-size:24px; }
+    .hero-buttons{ flex-direction:column; align-items:flex-start; }
+    .services-grid, .projects-grid, .contact-grid, .footer-grid{ grid-template-columns:1fr; }
+    .trust-row{ gap:16px; }
+  }
+
+  @keyframes navIn{ from{ opacity:0; transform:translateY(-6px); } to{ opacity:1; transform:translateY(0); } }
+</style>
 </head>
 <body>
 
-  <div class="top-section">
-    <header>
-      <div class="container navbar">
-        <div class="logo">Aleena <span>Fatima</span></div>
+<header>
+  <div class="navbar">
+    <a href="#home" class="logo"><span class="dot-status"></span>aleena<em>.dev</em></a>
 
-        <!-- Mobile menu toggle -->
-        <button class="menu-toggle" aria-expanded="false" aria-controls="main-nav" aria-label="Open menu">
-          <span class="hamburger">
-            <span></span>
-            <span></span>
-            <span></span>
-          </span>
-        </button>
+    <button class="menu-toggle" aria-expanded="false" aria-controls="main-nav" aria-label="Open menu">
+      <span class="hamburger"><span></span><span></span><span></span></span>
+    </button>
 
-        <nav id="main-nav">
-          <ul>
-            <li><a href="#home">Home</a></li>
-            <li><a href="#about">About</a></li>
-            <li><a href="#services">Services</a></li>
-            <li><a href="#projects">Projects</a></li>
-            <li><a href="#contact">Contact</a></li>
-          </ul>
-        </nav>
-      </div>
-    </header>
-
-    <section class="hero" id="home">
-      <div class="container hero-content">
-        <div class="hero-text">
-          <h4>Professional WordPress Developer</h4>
-          <h1>Building <span>Strong</span>, Modern & High-Converting Websites</h1>
-          <p>
-            Hi — I build fast, responsive WordPress sites that look premium and convert visitors into customers.
-            Clean design, reliable performance, and focused on results.
-          </p>
-          <div class="hero-buttons">
-            <a href="#projects" class="btn btn-primary">View Portfolio</a>
-            <a href="#contact" class="btn btn-outline">Hire Me</a>
-          </div>
-          <div class="hero-stats">
-            <div>
-              <h3>3+</h3>
-              <p>Years Experience</p>
-            </div>
-            <div>
-              <h3>50+</h3>
-              <p>Projects Completed</p>
-            </div>
-            <div>
-              <h3>100%</h3>
-              <p>Responsive Design</p>
-            </div>
-          </div>
-        </div>
-
-        <div class="hero-image">
-          <img class="profile-img" src="profile.jpeg" alt="Aleena Fatima">
-        </div>
-
-        <div class="hero-card">
-          <h3>What I Do Best</h3>
-          <ul>
-            <li>Custom WordPress Website Development</li>
-            <li>Elementor & Theme Customization</li>
-            <li>Business, Blog & E-commerce Websites</li>
-            <li>Website Speed Optimization</li>
-            <li>Landing Pages for Leads & Sales</li>
-            <li>Ongoing Website Maintenance</li>
-          </ul>
-        </div>
-      </div>
-    </section>
+    <nav id="main-nav">
+      <ul>
+        <li><a href="#home" class="nav-link active">Home</a></li>
+        <li><a href="#about" class="nav-link">About</a></li>
+        <li><a href="#services" class="nav-link">Services</a></li>
+        <li><a href="#projects" class="nav-link">Projects</a></li>
+        <li><a href="#contact" class="nav-link nav-cta">Hire Me</a></li>
+      </ul>
+    </nav>
   </div>
+</header>
 
-  <section id="about">
-    <div class="container">
-      <div class="section-title">
-        <h2>About Me</h2>
-        <p>I create websites that are not only beautiful but also practical, fast, and focused on user experience.</p>
+<section class="hero" id="home">
+  <div class="hero-orb orb-1"></div>
+  <div class="hero-orb orb-2"></div>
+  <div class="particles"></div>
+
+  <div class="container hero-content">
+    <div class="hero-text">
+      <div class="availability-badge"><span class="pulse-wrap"></span> Available for new projects — booking July 2026</div>
+      <h1>Building <span class="grad">elegant</span>, high-converting websites</h1>
+      <p class="sub">
+        I build fast, responsive WordPress sites that look premium and convert visitors into customers —
+        clean design, reliable performance, and always focused on results.
+      </p>
+      <div class="hero-buttons">
+        <a href="#projects" class="btn btn-primary">View Portfolio →</a>
+        <a href="#contact" class="btn btn-outline">Hire Me</a>
       </div>
-      <div class="about-grid">
-        <div class="about-box">
-          <h3>Who is Aleena Fatima?</h3>
-          <p>
-            Aleena Fatima is a skilled WordPress Developer with a passion for crafting elegant,
-            functional, and conversion-focused websites. She works on personal brands, business websites,
-            blogs, and online stores with a strong attention to design and structure.
-          </p>
-          <p>
-            Her goal is simple: create websites that look premium, perform smoothly, and help clients grow online.
-          </p>
+      <div class="hero-socials">
+        <a href="https://www.facebook.com/share/1BrQ3wyfaG/?mibextid=wwXIfr" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+        <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></a>
+        <a href="#" aria-label="LinkedIn"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="7" y1="10" x2="7" y2="17"/><circle cx="7" cy="6.5" r="0.6" fill="currentColor" stroke="none"/><path d="M11 17v-4a2 2 0 0 1 4 0v4"/><line x1="11" y1="10" x2="11" y2="17"/></svg></a>
+        <a href="https://www.tiktok.com/@sein.official" target="_blank" rel="noopener noreferrer" aria-label="TikTok"><svg viewBox="0 0 24 24"><path d="M9 3v10.5A4.5 4.5 0 1 0 13.5 18V8h3.5V6H13.5V3H9z"/></svg></a>
+      </div>
+      <div class="hero-stats">
+        <div><h3>3+</h3><p>Years experience</p></div>
+        <div><h3>50+</h3><p>Projects shipped</p></div>
+        <div><h3>100%</h3><p>Responsive</p></div>
+      </div>
+    </div>
+
+    <div class="hero-image">
+      <div class="float-chip chip-1"><svg class="ic" viewBox="0 0 24 24"><path d="M5 12l4 4 10-10"/></svg> 50+ Sites Launched</div>
+      <div class="portrait-frame">
+        <div class="inner"><img src="profile.jpeg" alt="Aleena Fatima"></div>
+      </div>
+      <div class="float-chip chip-2"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg> Fast Turnaround</div>
+      <div class="portrait-cap">
+        <span class="loc">Aleena Fatima</span>
+        <span>Lahore, Pakistan</span>
+      </div>
+    </div>
+
+    <div class="hero-card">
+      <div class="hero-card-head">
+        <div class="term-dots"><span></span><span></span><span></span></div>
+        <span class="path">~/aleena-dev/capabilities.json</span>
+      </div>
+      <div class="hero-card-body">
+        <h3>What I Do Best</h3>
+        <ul>
+          <li><span class="check"><svg viewBox="0 0 24 24"><path d="M5 12l4 4 10-10"/></svg></span>Custom WordPress Website Development</li>
+          <li><span class="check"><svg viewBox="0 0 24 24"><path d="M5 12l4 4 10-10"/></svg></span>Elementor &amp; Theme Customization</li>
+          <li><span class="check"><svg viewBox="0 0 24 24"><path d="M5 12l4 4 10-10"/></svg></span>Business, Blog &amp; E-commerce Websites</li>
+          <li><span class="check"><svg viewBox="0 0 24 24"><path d="M5 12l4 4 10-10"/></svg></span>Website Speed Optimization</li>
+          <li><span class="check"><svg viewBox="0 0 24 24"><path d="M5 12l4 4 10-10"/></svg></span>Landing Pages for Leads &amp; Sales</li>
+          <li><span class="check"><svg viewBox="0 0 24 24"><path d="M5 12l4 4 10-10"/></svg></span>Ongoing Website Maintenance</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="about">
+  <div class="container">
+    <div class="section-title reveal">
+      <div class="label label-center">about</div>
+      <h2>Who's behind the screen</h2>
+      <p>I create websites that are not only beautiful but also practical, fast, and focused on user experience.</p>
+    </div>
+
+    <div class="about-wrap">
+      <div class="about-box glass-card reveal">
+        <h3>Who is Aleena Fatima?</h3>
+        <p>
+          Aleena Fatima is a skilled WordPress Developer with a passion for crafting elegant,
+          functional, and conversion-focused websites. She works on personal brands, business websites,
+          blogs, and online stores with a strong attention to design and structure.
+        </p>
+        <p>Her goal is simple: create websites that look premium, perform smoothly, and help clients grow online.</p>
+        <div class="skills">
+          <span>WordPress</span>
+          <span>HTML5</span>
+          <span>CSS3</span>
+          <span>Elementor</span>
+          <span>Social Media Marketing</span>
+          <span>Responsive Design</span>
+          <span>Speed Optimization</span>
+          <span>Landing Pages</span>
         </div>
-        <div class="about-box">
-          <h3>Core Skills</h3>
-          <p>Strong command over modern website building tools and WordPress customization.</p>
-          <div class="skills">
-            <span>WordPress</span>
-            <span>HTML5</span>
-            <span>CSS3</span>
-            <span>Elementor</span>
-            <span>Social Media Marketing</span>
-            <span>Responsive Design</span>
-            <span>Speed Optimization</span>
-            <span>Landing Pages</span>
+      </div>
+
+      <div class="about-box glass-card reveal">
+        <h3>Experience Timeline</h3>
+        <div class="timeline">
+          <div class="timeline-item">
+            <h4>Freelance WordPress Developer</h4>
+            <span class="meta">2023 — Present</span>
+            <p>Delivering custom business sites, online stores, and landing pages for clients locally and internationally.</p>
+          </div>
+          <div class="timeline-item">
+            <h4>WooCommerce & Shopify Specialist</h4>
+            <span class="meta">2022 — 2023</span>
+            <p>Built and optimized e-commerce storefronts focused on conversion and load speed.</p>
+          </div>
+          <div class="timeline-item">
+            <h4>Started Web Development Journey</h4>
+            <span class="meta">2021</span>
+            <p>Began mastering HTML, CSS, and WordPress to build a foundation in modern web design.</p>
           </div>
         </div>
       </div>
     </div>
-  </section>
 
-  <section id="services">
-    <div class="container">
-      <div class="section-title">
-        <h2>My Services</h2>
-        <p>Professional WordPress solutions designed to make your brand stand out online.</p>
-      </div>
-      <div class="services-grid">
-        <div class="service-card">
-          <h3>Business Websites</h3>
-          <p>I build professional business websites that create trust, improve branding, and turn visitors into clients.</p>
-        </div>
-        <div class="service-card">
-          <h3>E-commerce Stores</h3>
-          <p>From product pages to smooth user journeys, I develop WooCommerce stores that are clean and effective.</p>
-        </div>
-        <div class="service-card">
-          <h3>Landing Pages</h3>
-          <p>High-converting landing pages for ads, offers, services, and lead generation campaigns.</p>
-        </div>
-        <div class="service-card">
-          <h3>Theme Customization</h3>
-          <p>I customize WordPress themes according to your brand identity and business goals.</p>
-        </div>
-        <div class="service-card">
-          <h3>Speed Optimization</h3>
-          <p>Website performance improvements to reduce load times and improve overall user experience.</p>
-        </div>
-        <div class="service-card">
-          <h3>Maintenance & Support</h3>
-          <p>Ongoing support for updates, fixes, backups, and keeping your site secure and smooth.</p>
-        </div>
+    <div class="about-box glass-card reveal">
+      <h3>Skill Proficiency</h3>
+      <div class="skill-meters">
+        <div class="meter-row" style="--target:96%"><div class="meter-label"><span>WordPress Development</span><span>96%</span></div><div class="meter-track"><div class="meter-fill"></div></div></div>
+        <div class="meter-row" style="--target:90%"><div class="meter-label"><span>Elementor & Theme Customization</span><span>90%</span></div><div class="meter-track"><div class="meter-fill"></div></div></div>
+        <div class="meter-row" style="--target:88%"><div class="meter-label"><span>WooCommerce / Shopify</span><span>88%</span></div><div class="meter-track"><div class="meter-fill"></div></div></div>
+        <div class="meter-row" style="--target:93%"><div class="meter-label"><span>Speed Optimization</span><span>93%</span></div><div class="meter-track"><div class="meter-fill"></div></div></div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <section id="projects">
-    <div class="container">
-      <div class="section-title">
-        <h2>Featured Projects</h2>
-        <p>A few examples of the type of websites Aleena Fatima can create and manage.</p>
+<section id="services">
+  <div class="container">
+    <div class="section-title reveal">
+      <div class="label label-center">services</div>
+      <h2>My Services</h2>
+      <p>Professional WordPress solutions designed to make your brand stand out online.</p>
+    </div>
+    <div class="services-grid">
+      <div class="service-card glass-card reveal">
+        <span class="service-num">01</span>
+        <div class="icon-badge"><svg viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M3 13h18"/></svg></div>
+        <h3>Business Websites</h3>
+        <p>I build professional business websites that create trust, improve branding, and turn visitors into clients.</p>
       </div>
-      <div class="projects-grid">
-        <div class="project-card">
+      <div class="service-card glass-card reveal">
+        <span class="service-num">02</span>
+        <div class="icon-badge"><svg viewBox="0 0 24 24"><path d="M6 8h12l1 12H5L6 8Z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg></div>
+        <h3>E-commerce Stores</h3>
+        <p>From product pages to smooth user journeys, I develop WooCommerce stores that are clean and effective.</p>
+      </div>
+      <div class="service-card glass-card reveal">
+        <span class="service-num">03</span>
+        <div class="icon-badge"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.3" fill="currentColor" stroke="none"/></svg></div>
+        <h3>Landing Pages</h3>
+        <p>High-converting landing pages for ads, offers, services, and lead generation campaigns.</p>
+      </div>
+      <div class="service-card glass-card reveal">
+        <span class="service-num">04</span>
+        <div class="icon-badge"><svg viewBox="0 0 24 24"><line x1="4" y1="6" x2="20" y2="6"/><circle cx="9" cy="6" r="2" fill="currentColor" stroke="none"/><line x1="4" y1="12" x2="20" y2="12"/><circle cx="15" cy="12" r="2" fill="currentColor" stroke="none"/><line x1="4" y1="18" x2="20" y2="18"/><circle cx="7" cy="18" r="2" fill="currentColor" stroke="none"/></svg></div>
+        <h3>Theme Customization</h3>
+        <p>I customize WordPress themes according to your brand identity and business goals.</p>
+      </div>
+      <div class="service-card glass-card reveal">
+        <span class="service-num">05</span>
+        <div class="icon-badge"><svg viewBox="0 0 24 24"><path d="M4 14a8 8 0 1 1 16 0"/><path d="M12 14l4-4"/><circle cx="12" cy="14" r="1.2" fill="currentColor" stroke="none"/></svg></div>
+        <h3>Speed Optimization</h3>
+        <p>Website performance improvements to reduce load times and improve overall user experience.</p>
+      </div>
+      <div class="service-card glass-card reveal">
+        <span class="service-num">06</span>
+        <div class="icon-badge"><svg viewBox="0 0 24 24"><path d="M14.7 6.3a4 4 0 1 0-5.4 5.4L4 17l3 3 5.3-5.3a4 4 0 0 0 5.4-5.4l-2.1 2.1-2-2 2.1-2.1Z"/></svg></div>
+        <h3>Maintenance &amp; Support</h3>
+        <p>Ongoing support for updates, fixes, backups, and keeping your site secure and smooth.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="projects">
+  <div class="container">
+    <div class="section-title reveal">
+      <div class="label label-center">projects</div>
+      <h2>Featured Projects</h2>
+      <p>A few examples of the type of websites Aleena Fatima can create and manage.</p>
+    </div>
+
+    <div class="project-filters reveal">
+      <button class="filter-btn active" data-filter="all">All Work</button>
+      <button class="filter-btn" data-filter="wordpress">WordPress</button>
+      <button class="filter-btn" data-filter="ecommerce">E-commerce</button>
+      <button class="filter-btn" data-filter="social">Social Media</button>
+    </div>
+
+    <div class="projects-grid">
+      <!-- Pink Skips Manchester -->
+      <div class="project-card glass-card reveal" data-cat="wordpress">
+        <div class="browser-frame">
+          <div class="browser-bar">
+            <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+            <a class="url" href="https://pinkskipsmanchester.co.uk" target="_blank" rel="noopener noreferrer">pinkskipsmanchester.co.uk ↗</a>
+          </div>
+          <a href="https://pinkskipsmanchester.co.uk" target="_blank" class="live-badge" rel="noopener noreferrer"><span class="dotlive"></span>LIVE ↗</a>
+          <img class="project-thumb" src="pink_skips.png" alt="Pink Skips Manchester">
+        </div>
+        <span class="project-tag">WordPress + Elementor</span>
+        <h3>Pink Skips Manchester</h3>
+        <p>A premium waste management and skip hire booking platform in Manchester featuring high recycling rates and clean online booking queries.</p>
+        <div class="project-stats">
+          <div><span class="v">95%</span><span class="l">Recycling</span></div>
+          <div><span class="v">100%</span><span class="l">Responsive</span></div>
+        </div>
+      </div>
+
+      <!-- 4D Plates -->
+      <div class="project-card glass-card reveal" data-cat="ecommerce">
+        <div class="browser-frame">
+          <div class="browser-bar">
+            <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+            <a class="url" href="https://4dplates.co.uk" target="_blank" rel="noopener noreferrer">4dplates.co.uk ↗</a>
+          </div>
+          <a href="https://4dplates.co.uk" target="_blank" class="live-badge" rel="noopener noreferrer"><span class="dotlive"></span>LIVE ↗</a>
+          <img class="project-thumb" src="fourd_plates.png" alt="4D Plates UK">
+        </div>
+        <span class="project-tag">WooCommerce + Custom UI</span>
+        <h3>4D Plates</h3>
+        <p>A high-performance e-commerce store specializing in custom automotive plates with 3D gel and 4D acrylic preview features.</p>
+        <div class="project-stats">
+          <div><span class="v">4.2x</span><span class="l">Sales Lift</span></div>
+          <div><span class="v">100%</span><span class="l">DVLA Legal</span></div>
+        </div>
+      </div>
+
+      <!-- Werneth Suite -->
+      <div class="project-card glass-card reveal" data-cat="wordpress">
+        <div class="browser-frame">
+          <div class="browser-bar">
+            <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+            <a class="url" href="https://wernethsuite.com" target="_blank" rel="noopener noreferrer">wernethsuite.com ↗</a>
+          </div>
+          <a href="https://wernethsuite.com" target="_blank" class="live-badge" rel="noopener noreferrer"><span class="dotlive"></span>LIVE ↗</a>
+          <img class="project-thumb" src="werneth_suite.png" alt="Werneth Suite Oldham">
+        </div>
+        <span class="project-tag">WordPress + Booking</span>
+        <h3>Werneth Suite Oldham</h3>
+        <p>An elegant showcase website for a luxury wedding & event banquet venue, offering digital room tours and event booking systems.</p>
+        <div class="project-stats">
+          <div><span class="v">300+</span><span class="l">Guests</span></div>
+          <div><span class="v">2 wks</span><span class="l">Delivery</span></div>
+        </div>
+      </div>
+
+      <!-- 360 Powerhouse -->
+      <div class="project-card glass-card reveal" data-cat="wordpress">
+        <div class="browser-frame">
+          <div class="browser-bar">
+            <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+            <a class="url" href="https://360powerhouse.co.uk" target="_blank" rel="noopener noreferrer">360powerhouse.co.uk ↗</a>
+          </div>
+          <a href="https://360powerhouse.co.uk" target="_blank" class="live-badge" rel="noopener noreferrer"><span class="dotlive"></span>LIVE ↗</a>
+          <img class="project-thumb" src="three60_powerhouse.png" alt="360 Powerhouse Hub">
+        </div>
+        <span class="project-tag">WordPress / Custom PHP</span>
+        <h3>360 Powerhouse Hub</h3>
+        <p>A professional networking platform portal connecting CEOs, directors, and leaders across property, finance, and tech industries.</p>
+        <div class="project-stats">
+          <div><span class="v">500+</span><span class="l">Members</span></div>
+          <div><span class="v">6+</span><span class="l">Fields</span></div>
+        </div>
+      </div>
+
+      <!-- Juice N Power -->
+      <div class="project-card glass-card reveal" data-cat="ecommerce">
+        <div class="browser-frame">
+          <div class="browser-bar">
+            <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+            <a class="url" href="https://juicenpower.com" target="_blank" rel="noopener noreferrer">juicenpower.com ↗</a>
+          </div>
+          <a href="https://juicenpower.com" target="_blank" class="live-badge" rel="noopener noreferrer"><span class="dotlive"></span>LIVE ↗</a>
+          <img class="project-thumb" src="juice_n_power.png" alt="Juice N Power">
+        </div>
+        <span class="project-tag">WooCommerce / Retail</span>
+        <h3>Juice N Power</h3>
+        <p>A vibrant, premium e-commerce storefront for retail and wholesale distribution of e-liquids, vapes, and accessories.</p>
+        <div class="project-stats">
+          <div><span class="v">+58%</span><span class="l">Checkout Conv</span></div>
+          <div><span class="v">Global</span><span class="l">Scale</span></div>
+        </div>
+      </div>
+
+      <!-- PKB Dubai -->
+      <div class="project-card glass-card reveal" data-cat="wordpress">
+        <div class="browser-frame">
+          <div class="browser-bar">
+            <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+            <a class="url" href="https://pkbdubai.com" target="_blank" rel="noopener noreferrer">pkbdubai.com ↗</a>
+          </div>
+          <a href="https://pkbdubai.com" target="_blank" class="live-badge" rel="noopener noreferrer"><span class="dotlive"></span>LIVE ↗</a>
+          <img class="project-thumb" src="pkb_dubai.png" alt="PKB Dubai Advisory">
+        </div>
+        <span class="project-tag">WordPress + Portal</span>
+        <h3>PKB Dubai Advisory</h3>
+        <p>A corporate consulting website helping global investors establish mainland, freezone, and offshore businesses in the UAE.</p>
+        <div class="project-stats">
+          <div><span class="v">200+</span><span class="l">Companies</span></div>
+          <div><span class="v">100%</span><span class="l">Compliance</span></div>
+        </div>
+      </div>
+
+      <!-- SheSole -->
+      <div class="project-card glass-card reveal" data-cat="ecommerce">
+        <div class="browser-frame">
+          <div class="browser-bar">
+            <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+            <a class="url" href="https://shesole.pk/" target="_blank" rel="noopener noreferrer">shesole.pk ↗</a>
+          </div>
+          <a href="https://shesole.pk/" target="_blank" class="live-badge" rel="noopener noreferrer"><span class="dotlive"></span>LIVE ↗</a>
+          <img class="project-thumb" src="shesole.png" alt="SheSole Shoes">
+        </div>
+        <span class="project-tag">Shopify Store</span>
+        <h3>SheSole Shoes</h3>
+        <p>An elegant ladies footwear retail brand platform, showcasing custom-crafted heels, flats, and bridal shoe collections.</p>
+        <div class="project-stats">
+          <div><span class="v">10k+</span><span class="l">Orders</span></div>
+          <div><span class="v">+48%</span><span class="l">Returning Cust</span></div>
+        </div>
+      </div>
+
+      <!-- Dubai Day Out -->
+      <div class="project-card glass-card reveal" data-cat="ecommerce">
+        <div class="browser-frame">
+          <div class="browser-bar">
+            <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+            <a class="url" href="https://dubaidayout.com/" target="_blank" rel="noopener noreferrer">dubaidayout.com ↗</a>
+          </div>
+          <a href="https://dubaidayout.com/" target="_blank" class="live-badge" rel="noopener noreferrer"><span class="dotlive"></span>LIVE ↗</a>
+          <img class="project-thumb" src="dubai_dayout.png" alt="Dubai Day Out Tours">
+        </div>
+        <span class="project-tag">Laravel Booking</span>
+        <h3>Dubai Day Out Tours</h3>
+        <p>An interactive travel agency booking portal offering desert safaris, dhow cruises, and adventure tours in the UAE.</p>
+        <div class="project-stats">
+          <div><span class="v">15k+</span><span class="l">Bookings</span></div>
+          <div><span class="v">4.9/5</span><span class="l">Rating</span></div>
+        </div>
+      </div>
+
+      <!-- Safari Desert UAE -->
+      <div class="project-card glass-card reveal" data-cat="wordpress">
+        <div class="browser-frame">
+          <div class="browser-bar">
+            <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+            <a class="url" href="https://safaridesertuae.com/" target="_blank" rel="noopener noreferrer">safaridesertuae.com ↗</a>
+          </div>
+          <a href="https://safaridesertuae.com/" target="_blank" class="live-badge" rel="noopener noreferrer"><span class="dotlive"></span>LIVE ↗</a>
+          <img class="project-thumb" src="safari_desert_uae.png" alt="Safari Desert UAE">
+        </div>
+        <span class="project-tag">WordPress / Booking</span>
+        <h3>Safari Desert UAE</h3>
+        <p>A specialized tourism booking platform showcasing desert safari programs, camel riding, and live show packages.</p>
+        <div class="project-stats">
+          <div><span class="v">8k+</span><span class="l">Tours Booked</span></div>
+          <div><span class="v">+35%</span><span class="l">Conv Lift</span></div>
+        </div>
+      </div>
+
+      <!-- Organic by CH -->
+      <div class="project-card glass-card reveal" data-cat="ecommerce">
+        <div class="browser-frame">
+          <div class="browser-bar">
+            <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+            <a class="url" href="https://organicbych.com/" target="_blank" rel="noopener noreferrer">organicbych.com ↗</a>
+          </div>
+          <a href="https://organicbych.com/" target="_blank" class="live-badge" rel="noopener noreferrer"><span class="dotlive"></span>LIVE ↗</a>
+          <img class="project-thumb" src="organic_by_ch.png" alt="Organic by Chaudary Saab">
+        </div>
+        <span class="project-tag">Shopify Store</span>
+        <h3>Organic by Chaudary Saab</h3>
+        <p>A healthy foods and organic retail brand layout featuring natural dry fruits, seeds, nuts, and healthy radiance blends.</p>
+        <div class="project-stats">
+          <div><span class="v">5k+</span><span class="l">Happy Cust</span></div>
+          <div><span class="v">100%</span><span class="l">Natural</span></div>
+        </div>
+      </div>
+
+      <div class="project-card glass-card reveal" data-cat="wordpress">
+        <div class="browser-frame">
+          <div class="browser-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="url">aleenafatima.dev/corporate-business</span></div>
+          <span class="live-badge"><span class="dotlive"></span>LIVE</span>
           <img class="project-thumb" src="second image.jpeg" alt="Corporate Business Site">
-          <h3>Corporate Business Site</h3>
-          <p>A premium business website with service pages, contact forms, and a polished professional layout.</p>
-          <span class="project-tag">WordPress + Elementor</span>
         </div>
-        <div class="project-card">
+        <span class="project-tag">WordPress + Elementor</span>
+        <h3>Corporate Business Site</h3>
+        <p>A premium business website with service pages, contact forms, and a polished professional layout.</p>
+        <div class="project-stats">
+          <div><span class="v">98</span><span class="l">Speed Score</span></div>
+          <div><span class="v">12</span><span class="l">Pages Built</span></div>
+        </div>
+      </div>
+
+      <div class="project-card glass-card reveal" data-cat="ecommerce">
+        <div class="browser-frame">
+          <div class="browser-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="url">aleenafatima.dev/fashion-store</span></div>
+          <span class="live-badge"><span class="dotlive"></span>LIVE</span>
           <img class="project-thumb" src="3rd image.jpeg" alt="Online Fashion Store">
-          <h3>Online Fashion Store</h3>
-          <p>A modern WooCommerce store with product listings, shopping cart flow, and mobile-friendly design.</p>
-          <span class="project-tag">WooCommerce</span>
         </div>
-        <div class="project-card">
+        <span class="project-tag">WooCommerce</span>
+        <h3>Online Fashion Store</h3>
+        <p>A modern WooCommerce store with product listings, shopping cart flow, and mobile-friendly design.</p>
+        <div class="project-stats">
+          <div><span class="v">40+</span><span class="l">Products</span></div>
+          <div><span class="v">3.2x</span><span class="l">Conv. Lift</span></div>
+        </div>
+      </div>
+
+      <div class="project-card glass-card reveal" data-cat="ecommerce">
+        <div class="browser-frame">
+          <div class="browser-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="url">aleenafatima.dev/shopify-store</span></div>
+          <span class="live-badge"><span class="dotlive"></span>LIVE</span>
           <img class="project-thumb" src="4th image.jpeg" alt="Shopify Store Example">
-          <h3>Shopify Store</h3>
-          <p>A Shopify store implementation — theme, product setup, and customizations.</p>
-          <span class="project-tag">Shopify</span>
         </div>
-        <div class="project-card">
+        <span class="project-tag">Shopify</span>
+        <h3>Shopify Store</h3>
+        <p>A Shopify store implementation — theme, product setup, and customizations.</p>
+        <div class="project-stats">
+          <div><span class="v">100%</span><span class="l">Responsive</span></div>
+          <div><span class="v">2 wks</span><span class="l">Turnaround</span></div>
+        </div>
+      </div>
+
+      <div class="project-card glass-card reveal" data-cat="wordpress">
+        <div class="browser-frame">
+          <div class="browser-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="url">aleenafatima.dev/portfolio</span></div>
+          <span class="live-badge"><span class="dotlive"></span>LIVE</span>
           <img class="project-thumb" src="5.jpeg" alt="Personal Brand Portfolio">
-          <h3>Personal Brand Portfolio</h3>
-          <p>A clean personal portfolio with strong visuals, smooth sections, and a trust-building layout.</p>
-          <span class="project-tag">Responsive UI</span>
         </div>
-        <div class="project-card">
+        <span class="project-tag">Responsive UI</span>
+        <h3>Personal Brand Portfolio</h3>
+        <p>A clean personal portfolio with strong visuals, smooth sections, and a trust-building layout.</p>
+        <div class="project-stats">
+          <div><span class="v">95</span><span class="l">Speed Score</span></div>
+          <div><span class="v">6</span><span class="l">Sections</span></div>
+        </div>
+      </div>
+
+      <div class="project-card glass-card reveal" data-cat="ecommerce">
+        <div class="browser-frame">
+          <div class="browser-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="url">aleenafatima.dev/landing-launch</span></div>
+          <span class="live-badge"><span class="dotlive"></span>LIVE</span>
           <img class="project-thumb" src="portfolio.png" alt="Shopify Landing Page">
-          <h3>Shopify Landing Page</h3>
-          <p>High-converting Shopify landing page for campaigns and product launches.</p>
-          <span class="project-tag">Shopify</span>
         </div>
-        <div class="project-card">
+        <span class="project-tag">Shopify</span>
+        <h3>Shopify Landing Page</h3>
+        <p>High-converting Shopify landing page for campaigns and product launches.</p>
+        <div class="project-stats">
+          <div><span class="v">4.1x</span><span class="l">Conv. Lift</span></div>
+          <div><span class="v">1 wk</span><span class="l">Turnaround</span></div>
+        </div>
+      </div>
+
+      <div class="project-card glass-card reveal" data-cat="ecommerce">
+        <div class="browser-frame">
+          <div class="browser-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="url">aleenafatima.dev/case-study</span></div>
+          <span class="live-badge"><span class="dotlive"></span>LIVE</span>
           <img class="project-thumb" src="7th.jpeg" alt="E-commerce Case Study">
-          <h3>E-commerce Case Study</h3>
-          <p>Performance-focused store with improved conversions and speed optimizations.</p>
-          <span class="project-tag">WooCommerce / Shopify</span>
         </div>
-        <!-- Social Media Marketing project with 3 thumbnails -->
-        <div class="project-card">
+        <span class="project-tag">WooCommerce / Shopify</span>
+        <h3>E-commerce Case Study</h3>
+        <p>Performance-focused store with improved conversions and speed optimizations.</p>
+        <div class="project-stats">
+          <div><span class="v">+62%</span><span class="l">Speed Gain</span></div>
+          <div><span class="v">+28%</span><span class="l">Sales Lift</span></div>
+        </div>
+      </div>
+
+      <div class="project-card glass-card reveal" data-cat="social">
+        <div class="browser-frame">
+          <div class="browser-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="url">aleenafatima.dev/social-campaigns</span></div>
           <div class="smm-thumbs">
-              <img class="project-thumb" src="mm1 (1).png" alt="SMM project 1">
-              <img class="project-thumb" src="mm1 (2).png" alt="SMM project 2">
-              <img class="project-thumb" src="mm1 (3).png" alt="SMM project 3">
-              <img class="project-thumb" src="smm 4.jpeg" alt="SMM project 4">
-            </div>
-          <h3>Social Media Marketing</h3>
-          <p>Campaign visuals, post creatives and performance snapshots from recent social campaigns.</p>
-          <span class="project-tag">Social Media</span>
+            <img class="project-thumb" src="mm1 (1).png" alt="SMM project 1">
+            <img class="project-thumb" src="mm1 (2).png" alt="SMM project 2">
+            <img class="project-thumb" src="mm1 (3).png" alt="SMM project 3">
+            <img class="project-thumb" src="smm 4.jpeg" alt="SMM project 4">
+          </div>
         </div>
-      </div>
-    </div>
-  </section>
-
-  <section id="contact">
-    <div class="container">
-      <div class="section-title">
-        <h2>Contact Me</h2>
-        <p>Let’s build a website that looks strong, works smoothly, and grows your online presence.</p>
-      </div>
-      <div class="contact-grid">
-        <div class="contact-box">
-          <h3>Email</h3>
-          <p>For project inquiries and collaboration.</p>
-          <a href="mailto:hafizaaleena6@gmail.com">hafizaaleena6@gmail.com</a>
+        <span class="project-tag">Social Media</span>
+        <h3>Social Media Marketing</h3>
+        <p>Campaign visuals, post creatives and performance snapshots from recent social campaigns.</p>
+        <div class="project-stats">
+          <div><span class="v">12</span><span class="l">Campaigns</span></div>
+          <div><span class="v">+45%</span><span class="l">Engagement</span></div>
         </div>
-        <div class="contact-box">
-          <h3>Phone</h3>
-          <p>Available for freelance and client discussions.</p>
-          <a href="tel:+923214171162">03214171162</a>
-        </div>
-        <div class="contact-box">
-          <h3>Location</h3>
-          <p>Lahore, Pakistan</p>
-          <p>Working with clients locally and internationally.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <footer>
-    <p>© 2026 Aleena Fatima | WordPress Developer. All Rights Reserved.</p>
-
-    <div class="footer-social" aria-label="Social links" role="navigation">
-      <a class="social-tiktok" href="https://www.tiktok.com/@sein.official?_r=1&_d=eb33d6a90gfb1l&sec_uid=MS4wLjABAAAAVH2U5ei7NlAwhcvCix7ag0EmXOp8B0jSVmNQSdMR6N82JO8kalo4PBm1fWCid_na&share_author_id=7468426300275344416&sharer_language=en&source=h5_m&u_code=ddcc9eai75c3d1&timestamp=1775209084&user_id=6849311001507120134&sec_user_id=MS4wLjABAAAAmGLbUw35lxbD2I06gPpivRXJkg5nscbJPxLDHS4VBQiDwmFn5nkARWWzazU6RJfo&item_author_type=2&utm_source=copy&utm_campaign=client_share&utm_medium=android&share_iid=7624001877043513109&share_link_id=c095e7b2-e680-44df-8a45-c0d47b1ce3ff&share_app_id=1233&ugbiz_name=ACCOUNT&ug_btm=b6880%2Cb5836&social_share_type=5&enable_checksum=1" target="_blank" rel="noopener noreferrer" aria-label="Open TikTok profile" title="TikTok">
-        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
-          <path fill="#fff" d="M9 3v10.5A4.5 4.5 0 1 0 13.5 18V8h3.5V6H13.5V3H9z"/>
-          <path fill="#fff" d="M14.2 3.5c.3 0 .6 0 .9.1v2.1c-.3 0-.6 0-.9-.1-1.2-.2-2.1.1-2.8.6v1.8c.8-.6 1.9-1 2.8-1.1z"/>
-        </svg>
-      </a>
-
-      <a class="social-fb" href="https://www.facebook.com/share/1BrQ3wyfaG/?mibextid=wwXIfr" target="_blank" rel="noopener noreferrer" aria-label="Open Facebook profile" title="Facebook">
-        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
-          <path fill="#fff" d="M22 12.07C22 6.48 17.52 2 11.93 2S2 6.48 2 12.07C2 17.07 5.66 21.17 10.44 21.9v-6.99H7.9v-2.84h2.54V9.41c0-2.5 1.5-3.88 3.78-3.88 1.1 0 2.25.2 2.25.2v2.48h-1.27c-1.25 0-1.64.78-1.64 1.58v1.9h2.8l-.45 2.84h-2.35V21.9c4.78-.73 8.44-4.83 8.44-9.83z"/>
-        </svg>
-      </a>
-    </div>
-  </footer>
-
-  <!-- Modal / Lightbox for project images -->
-  <div id="project-modal" class="modal" aria-hidden="true">
-    <div class="modal-content">
-      <h3 id="modal-title"></h3>
-      <img id="modal-image" src="" alt="Project preview">
-      <div>
-        <button id="modal-close" class="modal-close">Close</button>
       </div>
     </div>
   </div>
+</section>
 
-  <script>
-    // Project thumbnail lightbox
-    document.querySelectorAll('.project-thumb').forEach(function(el){
-      el.addEventListener('click', function(){
-        var src = el.getAttribute('src');
-        var title = el.getAttribute('alt') || '';
-        var modal = document.getElementById('project-modal');
-        document.getElementById('modal-image').src = src;
-        document.getElementById('modal-title').textContent = title;
-        modal.classList.add('open');
-        modal.setAttribute('aria-hidden','false');
-      });
-    });
+<section id="contact">
+  <div class="container">
+    <div class="section-title reveal">
+      <div class="label label-center">contact</div>
+      <h2>Let's Build Something</h2>
+      <p>Let's build a website that looks strong, works smoothly, and grows your online presence.</p>
+    </div>
+    <div class="contact-grid">
+      <div class="contact-box glass-card reveal">
+        <div class="contact-icon"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg></div>
+        <h3>Email</h3>
+        <p>For project inquiries and collaboration.</p>
+        <a class="contact-link" href="mailto:hafizaaleena6@gmail.com">hafizaaleena6@gmail.com</a>
+      </div>
+      <div class="contact-box glass-card reveal">
+        <div class="contact-icon"><svg viewBox="0 0 24 24"><path d="M6 3h3l1.5 4-2 1.5a12 12 0 0 0 6 6l1.5-2 4 1.5v3a2 2 0 0 1-2 2A16 16 0 0 1 4 5a2 2 0 0 1 2-2Z"/></svg></div>
+        <h3>Phone</h3>
+        <p>Available for freelance and client discussions.</p>
+        <a class="contact-link" href="tel:+923214171162">0321 4171162</a>
+      </div>
+      <div class="contact-box glass-card reveal">
+        <div class="contact-icon"><svg viewBox="0 0 24 24"><path d="M12 21s7-6.5 7-12a7 7 0 1 0-14 0c0 5.5 7 12 7 12Z"/><circle cx="12" cy="9" r="2.3"/></svg></div>
+        <h3>Location</h3>
+        <p>Lahore, Pakistan — working with clients locally and internationally.</p>
+        <span class="status-tag"><span class="d"></span>Open to remote work</span>
+      </div>
+    </div>
+  </div>
+</section>
 
-    document.getElementById('modal-close').addEventListener('click', function(){
+<div class="container">
+  <div class="cta-band reveal">
+    <div class="cta-band-inner" id="cta-particles">
+      <h2>Ready to Build Your Next Website?</h2>
+      <p>Let's turn your idea into a fast, polished, conversion-ready website — built on WordPress, designed to grow with you.</p>
+      <div class="cta-buttons">
+        <a href="mailto:hafizaaleena6@gmail.com" class="btn btn-primary">Start a Project →</a>
+        <a href="#projects" class="btn btn-outline">See My Work</a>
+      </div>
+      <div class="trust-row">
+        <div><svg viewBox="0 0 24 24"><path d="M5 12l4 4 10-10"/></svg>50+ Projects Delivered</div>
+        <div><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>Fast Turnaround</div>
+        <div><svg viewBox="0 0 24 24"><path d="M12 21s7-6.5 7-12a7 7 0 1 0-14 0c0 5.5 7 12 7 12Z"/><circle cx="12" cy="9" r="2.3"/></svg>Remote-Friendly</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="#home" class="logo"><span class="dot-status"></span>aleena<em>.dev</em></a>
+        <p class="tagline">Crafting websites that convert.</p>
+        <p class="desc">WordPress developer based in Lahore, building premium, fast, conversion-focused websites for clients worldwide.</p>
+        <span class="status-tag"><span class="d"></span>Available for new projects</span>
+        <div class="footer-mini-profile">
+          <img src="profile.jpeg" alt="Aleena Fatima">
+          <div>
+            <div class="mp-name">Aleena Fatima</div>
+            <div class="mp-role">WordPress Developer</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-col">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="#home">Home</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#services">Services</a></li>
+          <li><a href="#projects">Projects</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Services</h4>
+        <ul>
+          <li><a href="#services">WordPress Development</a></li>
+          <li><a href="#services">WooCommerce Stores</a></li>
+          <li><a href="#services">Shopify Development</a></li>
+          <li><a href="#services">Landing Pages</a></li>
+          <li><a href="#services">Speed Optimization</a></li>
+          <li><a href="#services">Website Maintenance</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Resources</h4>
+        <ul>
+          <li><a href="#projects">Portfolio</a></li>
+          <li><a href="#projects">Case Studies</a></li>
+          <li><a href="#contact">Testimonials</a></li>
+          <li><a href="#contact">FAQ</a></li>
+          <li><a href="#contact">Blog</a></li>
+          <li><a href="#contact">Pricing</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col footer-social-col">
+        <h4>Connect</h4>
+        <div class="social-icons">
+          <a href="https://www.facebook.com/share/1BrQ3wyfaG/?mibextid=wwXIfr" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+          <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></a>
+          <a href="#" aria-label="LinkedIn"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="7" y1="10" x2="7" y2="17"/><circle cx="7" cy="6.5" r="0.6" fill="currentColor" stroke="none"/><path d="M11 17v-4a2 2 0 0 1 4 0v4"/><line x1="11" y1="10" x2="11" y2="17"/></svg></a>
+          <a href="https://www.tiktok.com/@sein.official" target="_blank" rel="noopener noreferrer" aria-label="TikTok"><svg viewBox="0 0 24 24"><path d="M9 3v10.5A4.5 4.5 0 1 0 13.5 18V8h3.5V6H13.5V3H9z"/></svg></a>
+          <a href="#" aria-label="GitHub"><svg viewBox="0 0 24 24"><path d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2 2-.2 4-1 4-4.5 0-1.1-.4-2-1-2.7.1-.3.4-1.3-.1-2.8 0 0-1.1-.3-3.5 1.3a12 12 0 0 0-6.3 0C5.2 5.2 4.1 5.5 4.1 5.5c-.5 1.5-.2 2.5-.1 2.8-.6.7-1 1.7-1 2.7 0 3.5 2 4.3 4 4.5-.4.4-.4.8-.5 1.4V20.5"/></svg></a>
+          <a href="#" aria-label="Behance"><svg viewBox="0 0 24 24"><rect x="2" y="7" width="9" height="10" rx="2"/><path d="M13 17V9h5a2.5 2.5 0 0 1 0 5h-4"/><path d="M13 13h4.5"/><path d="M16 5h4"/></svg></a>
+        </div>
+        <ul class="footer-contact-info">
+          <li><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg> hafizaaleena6@gmail.com</li>
+          <li><svg viewBox="0 0 24 24"><path d="M6 3h3l1.5 4-2 1.5a12 12 0 0 0 6 6l1.5-2 4 1.5v3a2 2 0 0 1-2 2A16 16 0 0 1 4 5a2 2 0 0 1 2-2Z"/></svg> 0321 4171162</li>
+          <li><svg viewBox="0 0 24 24"><path d="M12 21s7-6.5 7-12a7 7 0 1 0-14 0c0 5.5 7 12 7 12Z"/><circle cx="12" cy="9" r="2.3"/></svg> Lahore, Pakistan</li>
+          <li><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg> Mon – Sat, 10am – 7pm PKT</li>
+        </ul>
+      </div>
+
+      <div class="newsletter-row">
+        <div class="newsletter-text">
+          <h4>Stay in the loop</h4>
+          <p>Occasional notes on new projects, web design tips, and availability updates.</p>
+        </div>
+        <form class="newsletter-form" onsubmit="event.preventDefault(); this.querySelector('input').value='Subscribed ✓';">
+          <input type="email" placeholder="you@email.com" required>
+          <button type="submit">Subscribe</button>
+        </form>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p class="copy">© 2026 Aleena Fatima. All rights reserved.</p>
+      <div class="footer-bottom-links">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+        <span class="made-with">Designed with <span class="heart">♥</span> in Lahore</span>
+      </div>
+      <button class="to-top" id="to-top" aria-label="Back to top">
+        <svg viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+      </button>
+    </div>
+  </div>
+</footer>
+
+<div id="project-modal" class="modal" aria-hidden="true">
+  <div class="modal-content">
+    <button id="modal-close-top" class="modal-close-top" aria-label="Close modal">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      <span>Back</span>
+    </button>
+    <h3 id="modal-title"></h3>
+    <div class="modal-body">
+      <img id="modal-image" src="" alt="Project preview">
+    </div>
+    <div style="text-align: right;">
+      <button id="modal-close" class="modal-close">Close &amp; Return</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Project modal
+  document.querySelectorAll('.project-thumb').forEach(function(el){
+    el.addEventListener('click', function(){
+      var src = el.getAttribute('src');
+      var title = el.getAttribute('alt') || '';
       var modal = document.getElementById('project-modal');
-      modal.classList.remove('open');
-      modal.setAttribute('aria-hidden','true');
-      document.getElementById('modal-image').src = '';
+      document.getElementById('modal-image').src = src;
+      document.getElementById('modal-title').textContent = title;
+      modal.classList.add('open');
+      modal.setAttribute('aria-hidden','false');
     });
+  });
+  document.getElementById('modal-close').addEventListener('click', closeModal);
+  document.getElementById('modal-close-top').addEventListener('click', closeModal);
+  document.getElementById('project-modal').addEventListener('click', function(e){
+    if (e.target === this) closeModal();
+  });
+  function closeModal(){
+    var modal = document.getElementById('project-modal');
+    modal.classList.remove('open');
+    modal.setAttribute('aria-hidden','true');
+    document.getElementById('modal-image').src = '';
+  }
 
-    // close modal on outside click
-    document.getElementById('project-modal').addEventListener('click', function(e){
-      if (e.target === this) {
-        this.classList.remove('open');
-        this.setAttribute('aria-hidden','true');
-        document.getElementById('modal-image').src = '';
-      }
+  // Mobile nav
+  (function(){
+    var btn = document.querySelector('.menu-toggle');
+    var nav = document.getElementById('main-nav');
+    if (!btn || !nav) return;
+    btn.addEventListener('click', function(){
+      var expanded = this.getAttribute('aria-expanded') === 'true';
+      this.setAttribute('aria-expanded', String(!expanded));
+      nav.classList.toggle('open');
+      this.classList.toggle('open');
+      this.setAttribute('aria-label', expanded ? 'Open menu' : 'Close menu');
     });
+    nav.querySelectorAll('a').forEach(function(a){
+      a.addEventListener('click', function(){
+        nav.classList.remove('open');
+        btn.classList.remove('open');
+        btn.setAttribute('aria-expanded','false');
+        btn.setAttribute('aria-label','Open menu');
+      });
+    });
+  })();
 
-    // Mobile nav toggle
-    (function(){
-      var btn = document.querySelector('.menu-toggle');
-      var nav = document.getElementById('main-nav');
-      if (!btn || !nav) return;
+  // Active nav link on scroll
+  (function(){
+    var sections = document.querySelectorAll('section[id]');
+    var links = document.querySelectorAll('.nav-link');
+    if (!('IntersectionObserver' in window)) return;
+    var obs = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if (entry.isIntersecting){
+          links.forEach(function(l){
+            l.classList.toggle('active', l.getAttribute('href') === '#' + entry.target.id);
+          });
+        }
+      });
+    }, { rootMargin: '-40% 0px -50% 0px' });
+    sections.forEach(function(s){ obs.observe(s); });
+  })();
+
+  // Reveal on scroll + skill meters
+  (function(){
+    var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var items = document.querySelectorAll('.reveal, .meter-row');
+    if (reduceMotion || !('IntersectionObserver' in window)) {
+      items.forEach(function(el){ el.classList.add('visible'); });
+      return;
+    }
+    var observer = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    items.forEach(function(el){ observer.observe(el); });
+  })();
+
+  // Project filters
+  (function(){
+    var buttons = document.querySelectorAll('.filter-btn');
+    var cards = document.querySelectorAll('.project-card');
+    buttons.forEach(function(btn){
       btn.addEventListener('click', function(){
-        var expanded = this.getAttribute('aria-expanded') === 'true';
-        this.setAttribute('aria-expanded', String(!expanded));
-        nav.classList.toggle('open');
-        this.classList.toggle('open');
-        this.setAttribute('aria-label', expanded ? 'Open menu' : 'Close menu');
+        buttons.forEach(function(b){ b.classList.remove('active'); });
+        this.classList.add('active');
+        var filter = this.getAttribute('data-filter');
+        cards.forEach(function(card){
+          var cat = card.getAttribute('data-cat');
+          card.classList.toggle('hidden', filter !== 'all' && cat !== filter);
+        });
       });
-      // close nav on link click (mobile)
-      nav.querySelectorAll('a').forEach(function(a){
-        a.addEventListener('click', function(){ nav.classList.remove('open'); btn.classList.remove('open'); btn.setAttribute('aria-expanded','false'); btn.setAttribute('aria-label','Open menu'); });
-      });
-    })();
-  </script>
+    });
+  })();
 
-  <style>
-    /* Small animation for mobile nav */
-    nav { will-change: transform, opacity; }
-    nav.open { animation: navIn .22s ease both; }
-    @keyframes navIn { from { opacity:0; transform: translateY(-6px);} to { opacity:1; transform: translateY(0);} }
+  // Floating particles in hero
+  (function(){
+    var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduceMotion) return;
+    var wrap = document.querySelector('.hero .particles');
+    if (!wrap) return;
+    var count = window.innerWidth < 768 ? 10 : 22;
+    for (var i = 0; i < count; i++){
+      var p = document.createElement('span');
+      p.className = 'particle';
+      var size = (Math.random() * 3 + 1.5).toFixed(1);
+      p.style.width = size + 'px';
+      p.style.height = size + 'px';
+      p.style.left = (Math.random() * 100) + '%';
+      p.style.bottom = '-10px';
+      p.style.animationDuration = (Math.random() * 10 + 9) + 's';
+      p.style.animationDelay = (Math.random() * 10) + 's';
+      wrap.appendChild(p);
+    }
+  })();
 
-    /* Tweak button & CTA spacing on small screens */
-    .hero-buttons .btn-primary { box-shadow: 0 8px 24px rgba(242,182,255,0.12); }
-    .hero-buttons { align-items:center; }
+  // Floating particles in CTA band
+  (function(){
+    var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduceMotion) return;
+    var wrap = document.getElementById('cta-particles');
+    if (!wrap) return;
+    var count = window.innerWidth < 768 ? 8 : 16;
+    for (var i = 0; i < count; i++){
+      var p = document.createElement('span');
+      p.className = 'cta-particle';
+      var size = (Math.random() * 3 + 1.5).toFixed(1);
+      p.style.position = 'absolute';
+      p.style.width = size + 'px';
+      p.style.height = size + 'px';
+      p.style.left = (Math.random() * 100) + '%';
+      p.style.bottom = '-10px';
+      p.style.animationDuration = (Math.random() * 9 + 8) + 's';
+      p.style.animationDelay = (Math.random() * 9) + 's';
+      wrap.appendChild(p);
+    }
+  })();
 
-    /* Vertical rhythm improvements */
-    .section-title { margin-bottom: 40px; }
-    section { padding: 70px 0; }
-  </style>
-
-  <style>
-    /* Footer social icon styles */
-    .footer-social { margin-top: 12px; display:flex; justify-content:center; gap:12px; }
-    .footer-social a { width:48px; height:48px; display:inline-flex; align-items:center; justify-content:center; border-radius:50%; text-decoration:none; box-shadow:0 6px 18px rgba(0,0,0,0.18); transition:transform .18s ease, box-shadow .18s ease; }
-    .footer-social a:hover { transform:translateY(-4px) scale(1.05); box-shadow:0 14px 30px rgba(0,0,0,0.28); }
-    .footer-social svg { width:22px; height:22px; display:block; }
-    .social-tiktok { background: linear-gradient(135deg,#25F4EE 0%,#FE2C55 100%); }
-    .social-fb { background:#1877F2; }
-  </style>
-
+  // Back to top
+  document.getElementById('to-top').addEventListener('click', function(){
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+</script>
 </body>
 </html>
